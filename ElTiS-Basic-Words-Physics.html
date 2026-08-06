@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ELTiS Basic Words [Physics]</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --primary-navy: #1a2a6c;
+            --accent-blue: #5da9e9;
+            --text-dark: #2c3e50;
+            --gray-light: #dcdde1;
+            --white: #ffffff;
+            --error-red: #e84118;
+            --success-green: #4cd137;
+            --base-font: "Hiragino Maru Gothic ProN", "Hiragino Maru Gothic Pro", "Yu Gothic", "Meiryo", sans-serif;
+        }
+
+        body {
+            font-family: var(--base-font);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-navy);
+            color: var(--white);
+            width: 100%;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 700px;
+            width: 90%;
+            margin: 20px 0;
+            background: var(--white);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .progress-bar {
+            font-size: 0.9rem;
+            color: var(--primary-navy);
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .word-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0 30px 0;
+        }
+
+        .word-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-navy);
+            padding: 10px;
+            border-bottom: 3px solid var(--bg-color);
+        }
+
+        .audio-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s;
+        }
+
+        .audio-btn:active { transform: scale(0.9); }
+
+        .choices-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .choice-btn {
+            background: var(--white);
+            border: 2px solid var(--accent-blue);
+            padding: 20px 10px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--base-font);
+            color: var(--primary-navy);
+        }
+
+        .choice-btn:hover { background-color: #f0f7ff; transform: translateY(-2px); }
+        .choice-btn.wrong { background-color: #fab1a0; border-color: var(--error-red); color: var(--error-red); animation: shake 0.3s; }
+
+        @keyframes shake {
+            0%, 100% {transform: translateX(0);}
+            25% {transform: translateX(-5px);}
+            75% {transform: translateX(5px);}
+        }
+
+        #result-screen { display: none; }
+        .score-num { font-size: 3.5rem; color: var(--primary-navy); font-weight: bold; }
+        .mistake-list { text-align: left; background: #fff5f5; padding: 15px; border-radius: 10px; margin-top: 20px; max-height: 250px; overflow-y: auto; border: 1px solid #ffcdd2; }
+        .mistake-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #ffebee; }
+        .action-btn { background-color: var(--primary-navy); color: white; border: none; padding: 15px 40px; border-radius: 40px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; width: 100%; font-family: var(--base-font); }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ELTiS Basic Words [Physics] 50問</h1>
+</header>
+
+<div class="container" id="quiz-screen">
+    <div class="progress-bar" id="progress">1 / 50</div>
+    <div class="word-container">
+        <div class="word-display" id="word-text">Loading...</div>
+        <button class="audio-btn" onclick="speakWord()" title="発音を聞く">🔊</button>
+    </div>
+    <div class="choices-grid" id="choices-container"></div>
+    <div id="feedback" style="margin-top:20px; height: 1.2em; font-weight: bold;"></div>
+</div>
+
+<div class="container" id="result-screen">
+    <h2>トレーニング終了！</h2>
+    <div>一度で正解：<span class="score-num" id="final-score">0</span> / 50問</div>
+    <div id="mistake-container" style="display:none;">
+        <h3 style="color: var(--error-red); margin-top:25px;">要復習リスト</h3>
+        <div class="mistake-list" id="mistake-list"></div>
+    </div>
+    <button class="action-btn" onclick="sendEmail()">Tamaki先生に結果を送信</button>
+    <button class="action-btn" style="background-color: #95a5a6;" onclick="location.reload()">もう一度挑戦する</button>
+</div>
+
+<script>
+const vocabList = [
+    // --- Physics (IMG_3743_3.jpg Right Column under Physics) ---
+    {w:"mechanics", a:"力学", c:["光学","熱力学","電磁気学"]},
+    {w:"motion", a:"運動", c:["静止","振動","回転"]},
+    {w:"displacement", a:"変位", c:["距離","速度","加速度"]},
+    {w:"acceleration", a:"加速度", c:["速度","変位","角速度"]},
+    {w:"velocity", a:"速度", c:["速さ","加速度","距離"]},
+    {w:"projectile motion", a:"放物運動", c:["等速直線運動","円運動","単振動"]},
+    {w:"vector", a:"ベクトル", c:["スカラー","行列","テンソル"]},
+    {w:"law of inertia", a:"慣性の法則", c:["作用反作用の法則","運動方程式","万有引力の法則"]},
+    {w:"friction", a:"摩擦", c:["張力","浮力","弾性力"]},
+    {w:"mass", a:"質量", c:["重量","密度","体積"]},
+    {w:"centripetal force", a:"求心力", c:["遠心力","重力","剪断力"]},
+    {w:"centrifugal force", a:"遠心力", c:["求心力","摩擦力","復元力"]},
+    {w:"conservation of energy", a:"エネルギー保存", c:["運動量保存","角運動量保存","電荷保存"]},
+
+    // --- Physics (IMG_3744.jpg Left Column under Physics) ---
+    {w:"potential energy", a:"ポテンシャルエネルギー", c:["運動エネルギー","熱エネルギー","電気エネルギー"]},
+    {w:"momentum", a:"運動量", c:["力積","運動エネルギー","角運動量"]},
+    {w:"center of mass", a:"重心", c:["図心","焦点","作用点"]},
+    {w:"torque", a:"トルク", c:["仕事率","応力","圧力"]},
+    {w:"kinetic energy", a:"運動エネルギー", c:["位置エネルギー","内部エネルギー","結合エネルギー"]},
+    {w:"pendulum", a:"振り子", c:["滑車","てこ","ばね"]},
+    {w:"wavelength", a:"波長", c:["周波数","周期","振幅"]},
+    {w:"amplitude", a:"振幅", c:["波長","位相","振動数"]},
+    {w:"period", a:"周期", c:["周波数","波長","振幅"]},
+    {w:"trough", a:"谷", c:["山","波長","節"]},
+    {w:"crest", a:"山", c:["谷","腹","節"]},
+    {w:"simple harmonic motion", a:"単振動", c:["減衰振動","強制振動","等速円運動"]},
+    {w:"Doppler effect", a:"ドップラー効果", c:["ゼーベック効果","光電効果","トンネル効果"]},
+    {w:"pressure", a:"圧力", c:["応力","張力","浮力"]},
+    {w:"buoyancy", a:"浮力", c:["重力","抗力","揚力"]},
+    {w:"viscosity", a:"粘度", c:["密度","硬度","表面張力"]},
+    {w:"surface tension", a:"表面張力", c:["粘性率","毛細管現象","浸透圧"]},
+    {w:"thermodynamics", a:"熱力学", c:["統計力学","流体力学","量子力学"]},
+    {w:"conduction", a:"伝導", c:["対流","放射","拡散"]},
+    {w:"convection", a:"対流", c:["伝導","熱放射","反射"]},
+    {w:"radiation", a:"放射", c:["伝導","対流","屈折"]},
+    {w:"static electricity", a:"静電気", c:["動電気","電磁誘導","誘電体"]},
+    {w:"electric circuit", a:"電気回路", c:["磁気回路","電子構造","共振回路"]},
+    {w:"electric current", a:"電流", c:["電圧","電力","電磁波"]},
+    {w:"electric voltage", a:"電圧", c:["電流","電力量","電位差"]},
+    {w:"electric resistance", a:"電気抵抗", c:["コンダクタンス","キャパシタンス","インダクタンス"]},
+    {w:"magnetic field", a:"磁界", c:["電界","重力場","電磁波"]},
+    {w:"electromagnetic spectrum", a:"電磁スペクトル", c:["可視光線","吸収スペクトル","放射線"]},
+    {w:"reflection", a:"反射", c:["屈折","回折","干渉"]},
+    {w:"refraction", a:"屈折", c:["反射","全反射","散乱"]},
+    {w:"focus", a:"焦点", c:["主軸","光軸","像点"]},
+    {w:"opaque", a:"不透明な", c:["透明な","半透明な","反射する"]},
+    {w:"translucent", a:"半透明な", c:["透明な","不透明な","発光する"]},
+    {w:"concave lens", a:"凹レンズ", c:["凸レンズ","平面鏡","凹面鏡"]},
+    {w:"convex lens", a:"凸レンズ", c:["凹レンズ","凸面鏡","プリズム"]},
+    {w:"theory of relativity", a:"相対性理論", c:["量子力学","古典力学","電磁気学"]},
+    {w:"quantum physics", a:"量子物理学", c:["天体物理学","物性物理学","核物理学"]}
+];
+
+let currentIndex = 0;
+let firstTryCorrectCount = 0;
+let isFirstTry = true;
+let mistakes = [];
+
+function speakWord() {
+    const word = vocabList[currentIndex].w;
+    const uttr = new SpeechSynthesisUtterance(word);
+    uttr.lang = 'en-US';
+    uttr.rate = 0.8; 
+    speechSynthesis.speak(uttr);
+}
+
+function loadQuestion() {
+    const current = vocabList[currentIndex];
+    document.getElementById('progress').textContent = `${currentIndex + 1} / ${vocabList.length}`;
+    document.getElementById('word-text').textContent = current.w;
+    document.getElementById('feedback').textContent = "";
+    
+    const container = document.getElementById('choices-container');
+    container.innerHTML = '';
+    isFirstTry = true;
+
+    const choices = [current.a, ...current.c].sort(() => Math.random() - 0.5);
+
+    choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = choice;
+        btn.onclick = () => checkAnswer(choice, current.a, btn);
+        container.appendChild(btn);
+    });
+}
+
+function checkAnswer(selected, correct, btn) {
+    if (selected === correct) {
+        if (isFirstTry) {
+            firstTryCorrectCount++;
+            document.getElementById('feedback').style.color = "var(--success-green)";
+            document.getElementById('feedback').textContent = "Excellent!";
+        }
+        
+        setTimeout(() => {
+            currentIndex++;
+            if (currentIndex < vocabList.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }, 600);
+    } else {
+        if (isFirstTry) {
+            mistakes.push({w: vocabList[currentIndex].w, a: vocabList[currentIndex].a});
+            isFirstTry = false;
+        }
+        btn.classList.add('wrong');
+        document.getElementById('feedback').style.color = "var(--error-red)";
+        document.getElementById('feedback').textContent = "Try again!";
+    }
+}
+
+function showResult() {
+    document.getElementById('quiz-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+    document.getElementById('final-score').textContent = firstTryCorrectCount;
+
+    if (mistakes.length > 0) {
+        document.getElementById('mistake-container').style.display = 'block';
+        const listDiv = document.getElementById('mistake-list');
+        listDiv.innerHTML = mistakes.map(m => `
+            <div class="mistake-item">
+                <strong>${m.w}</strong>
+                <span>${m.a}</span>
+            </div>
+        `).join('');
+    }
+}
+
+function sendEmail() {
+    const teacherEmail = "tamaki@eigostudio-stepforward.com";
+    const subject = encodeURIComponent("ELTiS Basic Words [Physics] 語彙トレーニング結果報告");
+    
+    let mistakeText = mistakes.length > 0 
+        ? "\n\n■要復習リスト（間違えた単語）:\n" + mistakes.map(m => `・${m.w} (${m.a})`).join("\n")
+        : "\n\n完璧です！間違えた単語はありませんでした。";
+
+    const body = encodeURIComponent(`Tamaki先生へ\n\n50問の語彙トレーニングを完了しました。\n\n結果: 50問中 ${firstTryCorrectCount} 問を一度で正解しました。${mistakeText}\n\n次回は全問一度で正解できるよう頑張ります！`);
+    
+    window.location.href = `mailto:${teacherEmail}?subject=${subject}&body=${body}`;
+}
+
+window.onload = loadQuestion;
+</script>
+
+</body>
+</html>
