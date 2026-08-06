@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ELTiS Basic Words [Biology]</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --primary-navy: #1a2a6c;
+            --accent-blue: #5da9e9;
+            --text-dark: #2c3e50;
+            --gray-light: #dcdde1;
+            --white: #ffffff;
+            --error-red: #e84118;
+            --success-green: #4cd137;
+            --base-font: "Hiragino Maru Gothic ProN", "Hiragino Maru Gothic Pro", "Yu Gothic", "Meiryo", sans-serif;
+        }
+
+        body {
+            font-family: var(--base-font);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-navy);
+            color: var(--white);
+            width: 100%;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 700px;
+            width: 90%;
+            margin: 20px 0;
+            background: var(--white);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .progress-bar {
+            font-size: 0.9rem;
+            color: var(--primary-navy);
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .word-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0 30px 0;
+        }
+
+        .word-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-navy);
+            padding: 10px;
+            border-bottom: 3px solid var(--bg-color);
+        }
+
+        .audio-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s;
+        }
+
+        .audio-btn:active { transform: scale(0.9); }
+
+        .choices-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .choice-btn {
+            background: var(--white);
+            border: 2px solid var(--accent-blue);
+            padding: 20px 10px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--base-font);
+            color: var(--primary-navy);
+        }
+
+        .choice-btn:hover { background-color: #f0f7ff; transform: translateY(-2px); }
+        .choice-btn.wrong { background-color: #fab1a0; border-color: var(--error-red); color: var(--error-red); animation: shake 0.3s; }
+
+        @keyframes shake {
+            0%, 100% {transform: translateX(0);}
+            25% {transform: translateX(-5px);}
+            75% {transform: translateX(5px);}
+        }
+
+        #result-screen { display: none; }
+        .score-num { font-size: 3.5rem; color: var(--primary-navy); font-weight: bold; }
+        .mistake-list { text-align: left; background: #fff5f5; padding: 15px; border-radius: 10px; margin-top: 20px; max-height: 250px; overflow-y: auto; border: 1px solid #ffcdd2; }
+        .mistake-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #ffebee; }
+        .action-btn { background-color: var(--primary-navy); color: white; border: none; padding: 15px 40px; border-radius: 40px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; width: 100%; font-family: var(--base-font); }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ELTiS Basic Words [Biology] 50問</h1>
+</header>
+
+<div class="container" id="quiz-screen">
+    <div class="progress-bar" id="progress">1 / 50</div>
+    <div class="word-container">
+        <div class="word-display" id="word-text">Loading...</div>
+        <button class="audio-btn" onclick="speakWord()" title="発音を聞く">🔊</button>
+    </div>
+    <div class="choices-grid" id="choices-container"></div>
+    <div id="feedback" style="margin-top:20px; height: 1.2em; font-weight: bold;"></div>
+</div>
+
+<div class="container" id="result-screen">
+    <h2>トレーニング終了！</h2>
+    <div>一度で正解：<span class="score-num" id="final-score">0</span> / 50問</div>
+    <div id="mistake-container" style="display:none;">
+        <h3 style="color: var(--error-red); margin-top:25px;">要復習リスト</h3>
+        <div class="mistake-list" id="mistake-list"></div>
+    </div>
+    <button class="action-btn" onclick="sendEmail()">Tamaki先生に結果を送信</button>
+    <button class="action-btn" style="background-color: #95a5a6;" onclick="location.reload()">もう一度挑戦する</button>
+</div>
+
+<script>
+const vocabList = [
+    // --- Biology (IMG_3742.jpg Left Column under Biology) ---
+    {w:"cell", a:"細胞", c:["組織","器官","分子"]},
+    {w:"chromosome", a:"染色体", c:["遺伝子","細胞膜","核酸"]},
+    {w:"mutation", a:"突然変異", c:["自然選択","交配","適応"]},
+    {w:"prokaryote", a:"原核生物", c:["真核生物","菌類","原生生物"]},
+    {w:"eukaryote", a:"真核生物", c:["原核生物","細菌","ウイルス"]},
+    {w:"gene", a:"遺伝子", c:["タンパク質","酵素","ホルモン"]},
+    {w:"dominant gene", a:"顕性遺伝子", c:["潜性遺伝子","致死遺伝子","変異遺伝子"]},
+    {w:"recessive gene", a:"潜性遺伝子", c:["顕性遺伝子","優性遺伝子","共優性遺伝子"]},
+    {w:"circulatory system", a:"循環器系", c:["消化器系","呼吸器系","神経系"]},
+    {w:"nervous system", a:"神経系", c:["内分泌系","免疫系","生殖器系"]},
+    {w:"digestive system", a:"消化器系", c:["循環器系","呼吸器系","排泄器系"]},
+    {w:"respiratory system", a:"呼吸器系", c:["消化器系","循環器系","骨格系"]},
+    {w:"reproductive system", a:"生殖器系", c:["免疫系","神経系","運動器系"]},
+    {w:"immune system", a:"免疫系", c:["循環器系","内分泌系","消化器系"]},
+    {w:"organ", a:"臓器", c:["細胞","組織","器官系"]},
+    {w:"carbohydrate", a:"炭水化物", c:["タンパク質","脂質","ビタミン"]},
+    {w:"protein", a:"タンパク質", c:["炭水化物","脂質","無機質"]},
+    {w:"lipid", a:"脂質", c:["タンパク質","炭水化物","核酸"]},
+    {w:"nutrition", a:"栄養", c:["代謝","消化","吸収"]},
+    {w:"metabolism", a:"代謝", c:["呼吸","光合成","発酵"]},
+    {w:"diabetes", a:"糖尿病", c:["高血圧","がん","貧血"]},
+    {w:"cancer", a:"がん", c:["糖尿病","喘息","アレルギー"]},
+    {w:"antibody", a:"抗体", c:["抗原","病原体","ワクチン"]},
+    {w:"antibiotic", a:"抗生物質", c:["抗原","抗体","防腐剤"]},
+    {w:"antigen", a:"抗原", c:["抗体","血清","毒素"]},
+    {w:"mammal", a:"哺乳類", c:["爬虫類","両生類","鳥類"]},
+    {w:"reptile", a:"爬虫類", c:["両生類","哺乳類","魚類"]},
+    {w:"amphibian", a:"両生類", c:["爬虫類","哺乳類","昆虫類"]},
+    {w:"predator", a:"捕食動物", c:["獲物","草食動物","寄生虫"]},
+
+    // --- Biology (IMG_3742.jpg Right Column under Biology) ---
+    {w:"prey", a:"獲物", c:["捕食者","天敵","寄生体"]},
+    {w:"carnivore", a:"肉食動物", c:["草食動物","雑食動物","分解者"]},
+    {w:"herbivore", a:"草食動物", c:["肉食動物","雑食動物","捕食動物"]},
+    {w:"omnivore", a:"雑食動物", c:["肉食動物","草食動物","寄生動物"]},
+    {w:"taxonomy", a:"分類学", c:["生態学","遺伝学","解剖学"]},
+    {w:"species", a:"種", c:["属","科","目"]},
+    {w:"natural selection", a:"自然淘汰", c:["人工選択","突然変異","遺伝的漂変"]},
+    {w:"adaptation", a:"適応", c:["進化","絶滅","変異"]},
+    {w:"evolution", a:"進化", c:["退化","退縮","停滞"]},
+    {w:"biodiversity", a:"生物多様性", c:["生態系","自然保護","環境破壊"]},
+    {w:"ecosystem", a:"生態系", c:["生息地","群集","環境"]},
+    {w:"symbiosis", a:"共生", c:["寄生","競争","捕食"]},
+    {w:"habitat", a:"生息地", c:["生態系","分布域","保護区"]},
+    {w:"flora and fauna", a:"動植物", c:["微生物","農作物","生態系"]},
+    {w:"chloroplast", a:"葉緑体", c:["ミトコンドリア","液胞","細胞膜"]},
+    {w:"chlorophyll", a:"葉緑素", c:["カロテン","酵素","ヘモグロビン"]},
+    {w:"photosynthesis", a:"光合成", c:["呼吸","蒸散","発酵"]},
+    {w:"pollination", a:"受粉", c:["受精","発芽","開花"]},
+    {w:"fertilization", a:"受精", c:["受粉","排卵","分娩"]},
+    {w:"epidemic", a:"流行病", c:["地方病", "感染源", "免疫"]},
+    {w:"microscope", a:"顕微鏡", c:["望遠鏡","虫眼鏡","分光器"]}
+];
+
+let currentIndex = 0;
+let firstTryCorrectCount = 0;
+let isFirstTry = true;
+let mistakes = [];
+
+function speakWord() {
+    const word = vocabList[currentIndex].w;
+    const uttr = new SpeechSynthesisUtterance(word);
+    uttr.lang = 'en-US';
+    uttr.rate = 0.8; 
+    speechSynthesis.speak(uttr);
+}
+
+function loadQuestion() {
+    const current = vocabList[currentIndex];
+    document.getElementById('progress').textContent = `${currentIndex + 1} / ${vocabList.length}`;
+    document.getElementById('word-text').textContent = current.w;
+    document.getElementById('feedback').textContent = "";
+    
+    const container = document.getElementById('choices-container');
+    container.innerHTML = '';
+    isFirstTry = true;
+
+    const choices = [current.a, ...current.c].sort(() => Math.random() - 0.5);
+
+    choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = choice;
+        btn.onclick = () => checkAnswer(choice, current.a, btn);
+        container.appendChild(btn);
+    });
+}
+
+function checkAnswer(selected, correct, btn) {
+    if (selected === correct) {
+        if (isFirstTry) {
+            firstTryCorrectCount++;
+            document.getElementById('feedback').style.color = "var(--success-green)";
+            document.getElementById('feedback').textContent = "Excellent!";
+        }
+        
+        setTimeout(() => {
+            currentIndex++;
+            if (currentIndex < vocabList.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }, 600);
+    } else {
+        if (isFirstTry) {
+            mistakes.push({w: vocabList[currentIndex].w, a: vocabList[currentIndex].a});
+            isFirstTry = false;
+        }
+        btn.classList.add('wrong');
+        document.getElementById('feedback').style.color = "var(--error-red)";
+        document.getElementById('feedback').textContent = "Try again!";
+    }
+}
+
+function showResult() {
+    document.getElementById('quiz-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+    document.getElementById('final-score').textContent = firstTryCorrectCount;
+
+    if (mistakes.length > 0) {
+        document.getElementById('mistake-container').style.display = 'block';
+        const listDiv = document.getElementById('mistake-list');
+        listDiv.innerHTML = mistakes.map(m => `
+            <div class="mistake-item">
+                <strong>${m.w}</strong>
+                <span>${m.a}</span>
+            </div>
+        `).join('');
+    }
+}
+
+function sendEmail() {
+    const teacherEmail = "tamaki@eigostudio-stepforward.com";
+    const subject = encodeURIComponent("ELTiS Basic Words [Biology] 語彙トレーニング結果報告");
+    
+    let mistakeText = mistakes.length > 0 
+        ? "\n\n■要復習リスト（間違えた単語）:\n" + mistakes.map(m => `・${m.w} (${m.a})`).join("\n")
+        : "\n\n完璧です！間違えた単語はありませんでした。";
+
+    const body = encodeURIComponent(`Tamaki先生へ\n\n50問の語彙トレーニングを完了しました。\n\n結果: 50問中 ${firstTryCorrectCount} 問を一度で正解しました。${mistakeText}\n\n次回は全問一度で正解できるよう頑張ります！`);
+    
+    window.location.href = `mailto:${teacherEmail}?subject=${subject}&body=${body}`;
+}
+
+window.onload = loadQuestion;
+</script>
+
+</body>
+</html>
