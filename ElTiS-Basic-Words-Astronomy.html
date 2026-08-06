@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ELTiS Basic Words [Astronomy]</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --primary-navy: #1a2a6c;
+            --accent-blue: #5da9e9;
+            --text-dark: #2c3e50;
+            --gray-light: #dcdde1;
+            --white: #ffffff;
+            --error-red: #e84118;
+            --success-green: #4cd137;
+            --base-font: "Hiragino Maru Gothic ProN", "Hiragino Maru Gothic Pro", "Yu Gothic", "Meiryo", sans-serif;
+        }
+
+        body {
+            font-family: var(--base-font);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-navy);
+            color: var(--white);
+            width: 100%;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 700px;
+            width: 90%;
+            margin: 20px 0;
+            background: var(--white);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .progress-bar {
+            font-size: 0.9rem;
+            color: var(--primary-navy);
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .word-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0 30px 0;
+        }
+
+        .word-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-navy);
+            padding: 10px;
+            border-bottom: 3px solid var(--bg-color);
+        }
+
+        .audio-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s;
+        }
+
+        .audio-btn:active { transform: scale(0.9); }
+
+        .choices-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .choice-btn {
+            background: var(--white);
+            border: 2px solid var(--accent-blue);
+            padding: 20px 10px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--base-font);
+            color: var(--primary-navy);
+        }
+
+        .choice-btn:hover { background-color: #f0f7ff; transform: translateY(-2px); }
+        .choice-btn.wrong { background-color: #fab1a0; border-color: var(--error-red); color: var(--error-red); animation: shake 0.3s; }
+
+        @keyframes shake {
+            0%, 100% {transform: translateX(0);}
+            25% {transform: translateX(-5px);}
+            75% {transform: translateX(5px);}
+        }
+
+        #result-screen { display: none; }
+        .score-num { font-size: 3.5rem; color: var(--primary-navy); font-weight: bold; }
+        .mistake-list { text-align: left; background: #fff5f5; padding: 15px; border-radius: 10px; margin-top: 20px; max-height: 250px; overflow-y: auto; border: 1px solid #ffcdd2; }
+        .mistake-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #ffebee; }
+        .action-btn { background-color: var(--primary-navy); color: white; border: none; padding: 15px 40px; border-radius: 40px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; width: 100%; font-family: var(--base-font); }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ELTiS Basic Words [Astronomy] 50問</h1>
+</header>
+
+<div class="container" id="quiz-screen">
+    <div class="progress-bar" id="progress">1 / 50</div>
+    <div class="word-container">
+        <div class="word-display" id="word-text">Loading...</div>
+        <button class="audio-btn" onclick="speakWord()" title="発音を聞く">🔊</button>
+    </div>
+    <div class="choices-grid" id="choices-container"></div>
+    <div id="feedback" style="margin-top:20px; height: 1.2em; font-weight: bold;"></div>
+</div>
+
+<div class="container" id="result-screen">
+    <h2>トレーニング終了！</h2>
+    <div>一度で正解：<span class="score-num" id="final-score">0</span> / 50問</div>
+    <div id="mistake-container" style="display:none;">
+        <h3 style="color: var(--error-red); margin-top:25px;">要復習リスト</h3>
+        <div class="mistake-list" id="mistake-list"></div>
+    </div>
+    <button class="action-btn" onclick="sendEmail()">Tamaki先生に結果を送信</button>
+    <button class="action-btn" style="background-color: #95a5a6;" onclick="location.reload()">もう一度挑戦する</button>
+</div>
+
+<script>
+const vocabList = [
+    // --- Astronomy (IMG_3743_2.jpg Left Column) ---
+    {w:"cosmos", a:"宇宙", c:["銀河","大気","空間"]},
+    {w:"galaxy", a:"銀河", c:["太陽系","恒星","天体"]},
+    {w:"Milky Way", a:"天の川", c:["アンドロメダ","黄道","赤道"]},
+    {w:"Solar System", a:"太陽系", c:["銀河系","深宇宙","星座"]},
+    {w:"Mercury", a:"水星", c:["金星","火星","木星"]},
+    {w:"Venus", a:"金星", c:["水星","火星","土星"]},
+    {w:"Mars", a:"火星", c:["金星","木星","天王星"]},
+    {w:"Jupiter", a:"木星", c:["土星","海王星","冥王星"]},
+    {w:"Saturn", a:"土星", c:["木星","天王星","海王星"]},
+    {w:"Uranus", a:"天王星", c:["海王星","冥王星","土星"]},
+    {w:"Neptune", a:"海王星", c:["天王星","冥王星","木星"]},
+    {w:"Pluto", a:"冥王星", c:["天王星","海王星","水星"]},
+    {w:"celestial body", a:"天体", c:["人工衛星","彗星","流星"]},
+    {w:"planet", a:"惑星", c:["恒星","衛星","彗星"]},
+    {w:"orbit", a:"軌道", c:["自転軸","公転","赤道"]},
+    {w:"rotation", a:"自転", c:["公転","偏光","収束"]},
+    {w:"axis of rotation", a:"自転軸", c:["軌道","黄道","地軸"]},
+    {w:"satellite", a:"衛星", c:["惑星","恒星","小惑星"]},
+    {w:"dwarf planet", a:"準惑星", c:["小惑星","彗星","流星"]},
+
+    // --- Astronomy (IMG_3743_2.jpg Right Column) ---
+    {w:"red giant", a:"赤色巨星", c:["白色矮星","超新星","黒色矮星"]},
+    {w:"white dwarf", a:"白色矮星", c:["赤色巨星","超新星","中性子星"]},
+    {w:"exoplanet", a:"太陽系外惑星", c:["準惑星","小惑星","彗星"]},
+    {w:"supernova", a:"超新星", c:["赤色巨星","星雲","黒点"]},
+    {w:"nebula", a:"星雲", c:["星座","銀河","ブラックホール"]},
+    {w:"constellation", a:"星座", c:["星雲","銀河","黄道"]},
+    {w:"red shift", a:"赤方偏移", c:["青方偏移","ドップラー効果","年周視差"]},
+    {w:"meteor", a:"隕石", c:["流れ星","彗星","小惑星"]},
+    {w:"shooting star", a:"流れ星", c:["隕石","彗星","恒星"]},
+    {w:"comet", a:"彗星", c:["小惑星","流星","衛星"]},
+    {w:"asteroid", a:"小惑星", c:["彗星","準惑星","流星体"]},
+    {w:"atmosphere", a:"大気", c:["真空","磁気圏","対流圏"]},
+    {w:"northern lights", a:"オーロラ", c:["太陽フレア","太陽風","黄道光"]},
+    {w:"lunar eclipse", a:"月食", c:["日食","日没","日出"]},
+    {w:"solar eclipse", a:"日食", c:["月食","満月","新月"]},
+    {w:"solar wind", a:"太陽風", c:["太陽フレア","黒点","プロミネンス"]},
+    {w:"solar flare", a:"太陽フレア", c:["太陽風","黒点","コロナ"]},
+    {w:"sunspot", a:"黒点", c:["太陽フレア","太陽風","光球"]},
+    {w:"dark matter", a:"暗黒物質", c:["宇宙ゴミ","真空","星間物質"]},
+    {w:"space debris", a:"宇宙ゴミ", c:["暗黒物質","隕石","小惑星"]},
+    {w:"extraterrestrial", a:"地球外の", c:["太陽系の","銀河の","深宇宙の"]},
+    {w:"astronomical unit", a:"天文単位", c:["光年","パーセク","絶対等級"]},
+    {w:"light year", a:"光年", c:["天文単位","パーセク","光速"]},
+    {w:"vacuum", a:"真空", c:["大気","大気圏","宇宙空間"]},
+    {w:"gravity", a:"重力", c:["引力","遠心力","求心力"]},
+    {w:"telescope", a:"望遠鏡", c:["顕微鏡","分光器","双眼鏡"]},
+    {w:"observatory", a:"天文台", c:["プラネタリウム","発射台","管制室"]},
+    {w:"Goldilocks zone", a:"生命居住可能領域", c:["暗黒物質領域","超新星領域","安全領域"]},
+    {w:"heliocentrism", a:"地動説", c:["天動説","地平説","宇宙論"]},
+    {w:"geocentrism", a:"天動説", c:["地動説","相対性理論","万有引力"]},
+    {w:"Space Race", a:"旧ソ連とアメリカの宇宙開発競争", c:["冷戦","軍拡大競争","国際宇宙ステーション構想"]}
+];
+
+let currentIndex = 0;
+let firstTryCorrectCount = 0;
+let isFirstTry = true;
+let mistakes = [];
+
+function speakWord() {
+    const word = vocabList[currentIndex].w;
+    const uttr = new SpeechSynthesisUtterance(word);
+    uttr.lang = 'en-US';
+    uttr.rate = 0.8; 
+    speechSynthesis.speak(uttr);
+}
+
+function loadQuestion() {
+    const current = vocabList[currentIndex];
+    document.getElementById('progress').textContent = `${currentIndex + 1} / ${vocabList.length}`;
+    document.getElementById('word-text').textContent = current.w;
+    document.getElementById('feedback').textContent = "";
+    
+    const container = document.getElementById('choices-container');
+    container.innerHTML = '';
+    isFirstTry = true;
+
+    const choices = [current.a, ...current.c].sort(() => Math.random() - 0.5);
+
+    choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = choice;
+        btn.onclick = () => checkAnswer(choice, current.a, btn);
+        container.appendChild(btn);
+    });
+}
+
+function checkAnswer(selected, correct, btn) {
+    if (selected === correct) {
+        if (isFirstTry) {
+            firstTryCorrectCount++;
+            document.getElementById('feedback').style.color = "var(--success-green)";
+            document.getElementById('feedback').textContent = "Excellent!";
+        }
+        
+        setTimeout(() => {
+            currentIndex++;
+            if (currentIndex < vocabList.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }, 600);
+    } else {
+        if (isFirstTry) {
+            mistakes.push({w: vocabList[currentIndex].w, a: vocabList[currentIndex].a});
+            isFirstTry = false;
+        }
+        btn.classList.add('wrong');
+        document.getElementById('feedback').style.color = "var(--error-red)";
+        document.getElementById('feedback').textContent = "Try again!";
+    }
+}
+
+function showResult() {
+    document.getElementById('quiz-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+    document.getElementById('final-score').textContent = firstTryCorrectCount;
+
+    if (mistakes.length > 0) {
+        document.getElementById('mistake-container').style.display = 'block';
+        const listDiv = document.getElementById('mistake-list');
+        listDiv.innerHTML = mistakes.map(m => `
+            <div class="mistake-item">
+                <strong>${m.w}</strong>
+                <span>${m.a}</span>
+            </div>
+        `).join('');
+    }
+}
+
+function sendEmail() {
+    const teacherEmail = "tamaki@eigostudio-stepforward.com";
+    const subject = encodeURIComponent("ELTiS Basic Words [Astronomy] 語彙トレーニング結果報告");
+    
+    let mistakeText = mistakes.length > 0 
+        ? "\n\n■要復習リスト（間違えた単語）:\n" + mistakes.map(m => `・${m.w} (${m.a})`).join("\n")
+        : "\n\n完璧です！間違えた単語はありませんでした。";
+
+    const body = encodeURIComponent(`Tamaki先生へ\n\n50問の語彙トレーニングを完了しました。\n\n結果: 50問中 ${firstTryCorrectCount} 問を一度で正解しました。${mistakeText}\n\n次回は全問一度で正解できるよう頑張ります！`);
+    
+    window.location.href = `mailto:${teacherEmail}?subject=${subject}&body=${body}`;
+}
+
+window.onload = loadQuestion;
+</script>
+
+</body>
+</html>
