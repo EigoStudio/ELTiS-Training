@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ELTiS Basic Words [Mathematics]</title>
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --primary-navy: #1a2a6c;
+            --accent-blue: #5da9e9;
+            --text-dark: #2c3e50;
+            --gray-light: #dcdde1;
+            --white: #ffffff;
+            --error-red: #e84118;
+            --success-green: #4cd137;
+            --base-font: "Hiragino Maru Gothic ProN", "Hiragino Maru Gothic Pro", "Yu Gothic", "Meiryo", sans-serif;
+        }
+
+        body {
+            font-family: var(--base-font);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary-navy);
+            color: var(--white);
+            width: 100%;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 700px;
+            width: 90%;
+            margin: 20px 0;
+            background: var(--white);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .progress-bar {
+            font-size: 0.9rem;
+            color: var(--primary-navy);
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .word-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0 30px 0;
+        }
+
+        .word-display {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--primary-navy);
+            padding: 10px;
+            border-bottom: 3px solid var(--bg-color);
+        }
+
+        .audio-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s;
+        }
+
+        .audio-btn:active { transform: scale(0.9); }
+
+        .choices-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .choice-btn {
+            background: var(--white);
+            border: 2px solid var(--accent-blue);
+            padding: 20px 10px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--base-font);
+            color: var(--primary-navy);
+        }
+
+        .choice-btn:hover { background-color: #f0f7ff; transform: translateY(-2px); }
+        .choice-btn.wrong { background-color: #fab1a0; border-color: var(--error-red); color: var(--error-red); animation: shake 0.3s; }
+
+        @keyframes shake {
+            0%, 100% {transform: translateX(0);}
+            25% {transform: translateX(-5px);}
+            75% {transform: translateX(5px);}
+        }
+
+        #result-screen { display: none; }
+        .score-num { font-size: 3.5rem; color: var(--primary-navy); font-weight: bold; }
+        .mistake-list { text-align: left; background: #fff5f5; padding: 15px; border-radius: 10px; margin-top: 20px; max-height: 250px; overflow-y: auto; border: 1px solid #ffcdd2; }
+        .mistake-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #ffebee; }
+        .action-btn { background-color: var(--primary-navy); color: white; border: none; padding: 15px 40px; border-radius: 40px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; width: 100%; font-family: var(--base-font); }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>ELTiS Basic Words [Mathematics] 50問</h1>
+</header>
+
+<div class="container" id="quiz-screen">
+    <div class="progress-bar" id="progress">1 / 50</div>
+    <div class="word-container">
+        <div class="word-display" id="word-text">Loading...</div>
+        <button class="audio-btn" onclick="speakWord()" title="発音を聞く">🔊</button>
+    </div>
+    <div class="choices-grid" id="choices-container"></div>
+    <div id="feedback" style="margin-top:20px; height: 1.2em; font-weight: bold;"></div>
+</div>
+
+<div class="container" id="result-screen">
+    <h2>トレーニング終了！</h2>
+    <div>一度で正解：<span class="score-num" id="final-score">0</span> / 50問</div>
+    <div id="mistake-container" style="display:none;">
+        <h3 style="color: var(--error-red); margin-top:25px;">要復習リスト</h3>
+        <div class="mistake-list" id="mistake-list"></div>
+    </div>
+    <button class="action-btn" onclick="sendEmail()">Tamaki先生に結果を送信</button>
+    <button class="action-btn" style="background-color: #95a5a6;" onclick="location.reload()">もう一度挑戦する</button>
+</div>
+
+<script>
+const vocabList = [
+    // --- Mathematics (IMG_3741.jpg Right Column) ---
+    {w:"addition", a:"足し算", c:["引き算","掛け算","割り算"]},
+    {w:"subtraction", a:"引き算", c:["足し算","掛け算","割り算"]},
+    {w:"multiplication", a:"掛け算", c:["割り算","足し算","引き算"]},
+    {w:"division", a:"割り算", c:["掛け算","足し算","引き算"]},
+    {w:"remainder", a:"余り", c:["答え","合計","差"]},
+    {w:"fraction", a:"分数", c:["小数","整数","素数"]},
+    {w:"numerator", a:"分子", c:["分母","逆数","係数"]},
+    {w:"denominator", a:"分母", c:["分子","定数","変数"]},
+    {w:"reciprocal", a:"逆数", c:["対数","関数","有理数"]},
+    {w:"decimal", a:"小数", c:["分数","整数","無理数"]},
+    {w:"integer", a:"整数", c:["小数","分数","虚数"]},
+    {w:"rational number", a:"有理数", c:["無理数","自然数","複素数"]},
+    {w:"irrational number", a:"無理数", c:["有理数","実数","素数"]},
+    {w:"prime number", a:"素数", c:["偶数","奇数","負の数"]},
+    {w:"consecutive numbers", a:"連続する数", c:["不連続な数","対称な数","互いに素な数"]},
+    {w:"ascending order", a:"大きくなる順番", c:["小さくなる順番","ランダムな順序","逆順"]},
+    {w:"descending order", a:"小さくなる順番", c:["大きくなる順番","アルファベット順","五十音順"]},
+    {w:"greatest common divisor", a:"最大公約数", c:["最小公倍数","公約数","素因数"]},
+    {w:"least common multiple", a:"最小公倍数", c:["最大公約数","公倍数","倍数"]},
+    {w:"constant", a:"定数", c:["変数","係数","指数"]},
+    {w:"coefficient", a:"係数", c:["定数","変数","底"]},
+    {w:"variable", a:"変数", c:["定数","係数","未知数"]},
+    {w:"function", a:"関数", c:["方程式","不等式","数列"]},
+    {w:"square", a:"平方", c:["立方","平方根","立方根"]},
+    {w:"cube", a:"立方", c:["平方","四角形","円柱"]},
+    {w:"square root", a:"平方根", c:["立方根","累乗","対数"]},
+    {w:"cubic root", a:"立方根", c:["平方根","立方","四乗根"]},
+    {w:"power", a:"累乗", c:["階乗","平方根","比例"]},
+    {w:"ratio", a:"割合", c:["確率","平均","偏差"]},
+    {w:"linear equation", a:"一次方程式", c:["二次方程式","連立方程式","微分方程式"]},
+    {w:"quadratic equation", a:"二次方程式", c:["一次方程式","連立方程式","恒等式"]},
+    {w:"simultaneous equation", a:"連立方程式", c:["一次方程式","二次方程式","微分方程式"]},
+    {w:"factorization", a:"因数分解", c:["展開","通分","約分"]},
+    {w:"proof", a:"証明", c:["仮定","推論","計算"]},
+
+    // --- Mathematics (IMG_3742.jpg Top Left Column) ---
+    {w:"isosceles triangle", a:"二等辺三角形", c:["正三角形","直角三角形","不等辺三角形"]},
+    {w:"hypotenuse", a:"直角三角形の斜辺", c:["底辺","高さ","対角線"]},
+    {w:"parallelogram", a:"平行四辺形", c:["ひし形","台形","長方形"]},
+    {w:"perimeter", a:"周囲", c:["面積","容積","半径"]},
+    {w:"area", a:"面積", c:["体積","周囲","表面積"]},
+    {w:"volume", a:"容積", c:["面積","質量","密度"]},
+    {w:"acute angle", a:"鋭角", c:["鈍角","直角","平角"]},
+    {w:"obtuse angle", a:"鈍角", c:["鋭角","直角","錯角"]},
+    {w:"coordinates", a:"座標", c:["ベクトル","軸","原点"]},
+    {w:"circumference", a:"円周", c:["半径","直径","弧"]},
+    {w:"radius", a:"半径", c:["直径","円周","弦"]},
+    {w:"diameter", a:"直径", c:["半径","円周","弧"]},
+    {w:"geometry", a:"幾何学", c:["代数","微積分","三角法"]},
+    {w:"algebra", a:"代数", c:["幾何学","統計学","解析学"]},
+    {w:"calculus", a:"微積分", c:["幾何学","代数","三角法"]},
+    {w:"trigonometry", a:"三角法", c:["幾何学","代数","微積分"]}
+];
+
+let currentIndex = 0;
+let firstTryCorrectCount = 0;
+let isFirstTry = true;
+let mistakes = [];
+
+function speakWord() {
+    const word = vocabList[currentIndex].w;
+    const uttr = new SpeechSynthesisUtterance(word);
+    uttr.lang = 'en-US';
+    uttr.rate = 0.8; 
+    speechSynthesis.speak(uttr);
+}
+
+function loadQuestion() {
+    const current = vocabList[currentIndex];
+    document.getElementById('progress').textContent = `${currentIndex + 1} / ${vocabList.length}`;
+    document.getElementById('word-text').textContent = current.w;
+    document.getElementById('feedback').textContent = "";
+    
+    const container = document.getElementById('choices-container');
+    container.innerHTML = '';
+    isFirstTry = true;
+
+    const choices = [current.a, ...current.c].sort(() => Math.random() - 0.5);
+
+    choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = choice;
+        btn.onclick = () => checkAnswer(choice, current.a, btn);
+        container.appendChild(btn);
+    });
+}
+
+function checkAnswer(selected, correct, btn) {
+    if (selected === correct) {
+        if (isFirstTry) {
+            firstTryCorrectCount++;
+            document.getElementById('feedback').style.color = "var(--success-green)";
+            document.getElementById('feedback').textContent = "Excellent!";
+        }
+        
+        setTimeout(() => {
+            currentIndex++;
+            if (currentIndex < vocabList.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }, 600);
+    } else {
+        if (isFirstTry) {
+            mistakes.push({w: vocabList[currentIndex].w, a: vocabList[currentIndex].a});
+            isFirstTry = false;
+        }
+        btn.classList.add('wrong');
+        document.getElementById('feedback').style.color = "var(--error-red)";
+        document.getElementById('feedback').textContent = "Try again!";
+    }
+}
+
+function showResult() {
+    document.getElementById('quiz-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+    document.getElementById('final-score').textContent = firstTryCorrectCount;
+
+    if (mistakes.length > 0) {
+        document.getElementById('mistake-container').style.display = 'block';
+        const listDiv = document.getElementById('mistake-list');
+        listDiv.innerHTML = mistakes.map(m => `
+            <div class="mistake-item">
+                <strong>${m.w}</strong>
+                <span>${m.a}</span>
+            </div>
+        `).join('');
+    }
+}
+
+function sendEmail() {
+    const teacherEmail = "tamaki@eigostudio-stepforward.com";
+    const subject = encodeURIComponent("ELTiS Basic Words [Mathematics] 語彙トレーニング結果報告");
+    
+    let mistakeText = mistakes.length > 0 
+        ? "\n\n■要復習リスト（間違えた単語）:\n" + mistakes.map(m => `・${m.w} (${m.a})`).join("\n")
+        : "\n\n完璧です！間違えた単語はありませんでした。";
+
+    const body = encodeURIComponent(`Tamaki先生へ\n\n50問の語彙トレーニングを完了しました。\n\n結果: 50問中 ${firstTryCorrectCount} 問を一度で正解しました。${mistakeText}\n\n次回は全問一度で正解できるよう頑張ります！`);
+    
+    window.location.href = `mailto:${teacherEmail}?subject=${subject}&body=${body}`;
+}
+
+window.onload = loadQuestion;
+</script>
+
+</body>
+</html>
