@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELTiS Practice Test - Grammar & Reading</title>
+<style>
+  :root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #27ae60;
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #cccccc;
+  }
+
+  body {
+    font-family: 'Segoe UI', Georgia, 'Times New Roman', Times, serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 850px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    color: var(--primary-color);
+    margin: 0;
+  }
+
+  .print-btn {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .print-btn:hover {
+    background-color: #2980b9;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 10px;
+    background: #e9ecef;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #495057;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tab-btn.active {
+    background: var(--secondary-color);
+    color: white;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+  }
+
+  .instructions {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    background-color: #f1f3f5;
+  }
+
+  .reading-passage {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    text-align: justify;
+  }
+
+  .reading-passage p {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-indent: 1.5em;
+  }
+
+  .line-num {
+    font-size: 0.8rem;
+    color: #777;
+    font-weight: normal;
+    display: inline-block;
+    width: 25px;
+    text-indent: 0;
+  }
+
+  .highlight-word {
+    font-weight: bold;
+    background-color: #e2e8f0;
+    padding: 2px 4px;
+    border-bottom: 2px solid var(--primary-color);
+  }
+
+  .underline-text {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+
+  .question-card {
+    margin-bottom: 25px;
+    page-break-inside: avoid;
+  }
+
+  .question-text {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-left: 15px;
+  }
+
+  .option-btn {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-family: 'Times New Roman', Times, serif;
+    transition: all 0.2s ease;
+  }
+
+  .option-btn:hover {
+    background-color: #eef6fc;
+    border-color: var(--secondary-color);
+  }
+
+  .option-btn.correct {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+    color: #155724;
+    font-weight: bold;
+  }
+
+  .option-btn.incorrect {
+    background-color: #f8d7da !important;
+    border-color: #dc3545 !important;
+    color: #721c24;
+  }
+
+  .explanation {
+    display: none;
+    margin-top: 10px;
+    padding: 12px 15px;
+    background-color: #e8f4f8;
+    border-left: 4px solid var(--secondary-color);
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+
+  .explanation-title {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 4px;
+  }
+
+  @media print {
+    body {
+      background-color: white;
+      padding: 0;
+      font-size: 11pt;
+    }
+
+    .container {
+      max-width: 100%;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .header-container h1 {
+      font-size: 1.2rem;
+    }
+
+    .print-btn, .tabs, .explanation {
+      display: none !important;
+    }
+
+    .tab-content {
+      display: block !important;
+      page-break-after: always;
+    }
+
+    .tab-content:last-child {
+      page-break-after: auto;
+    }
+
+    .instructions {
+      background-color: transparent;
+      border: 1px solid #000;
+    }
+
+    .reading-passage {
+      border: 1px solid #000;
+      padding: 15px;
+    }
+
+    .option-btn {
+      border: none;
+      padding: 2px 0;
+      background: transparent !important;
+      color: black !important;
+    }
+
+    .question-card {
+      margin-bottom: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-container">
+    <h1>ELTiS Practice Test</h1>
+    <button class="print-btn" onclick="window.print()">印刷する (PDF出力)</button>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="openTab(event, 'grammar-section')">Grammar (8問)</button>
+    <button class="tab-btn" onclick="openTab(event, 'reading-section')">Reading and Comprehension (10問)</button>
+  </div>
+
+  <!-- GRAMMAR (8 QUESTIONS) -->
+  <div id="grammar-section" class="tab-content active">
+    <div class="section-title">Grammar</div>
+    <div class="instructions">
+      <strong>Directions:</strong> In this part of the test, you will read some sentences and choose the best answer to complete each sentence.
+    </div>
+
+    <!-- Question 11 -->
+    <div class="question-card" id="q-g11">
+      <div class="question-text">11. Protecting wild animals in their natural habitats ________ necessary for preserving biodiversity.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g11', 'A')">A. is</button>
+        <button class="option-btn" onclick="checkAnswer('q-g11', 'B')">B. are</button>
+        <button class="option-btn" onclick="checkAnswer('q-g11', 'C')">C. to be</button>
+        <button class="option-btn" onclick="checkAnswer('q-g11', 'D')">D. being</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. is</div>
+        【解説】主語は動名詞フレーズ「Protecting wild animals...（野生動物を保護すること）」で単数扱いのため、述語動詞には <strong>is</strong> が入ります。
+      </div>
+    </div>
+
+    <!-- Question 12 -->
+    <div class="question-card" id="q-g12">
+      <div class="question-text">12. ________ the researchers studying the behavior of giant pandas in the mountains?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g12', 'A')">A. Will</button>
+        <button class="option-btn" onclick="checkAnswer('q-g12', 'B')">B. Are</button>
+        <button class="option-btn" onclick="checkAnswer('q-g12', 'C')">C. Is</button>
+        <button class="option-btn" onclick="checkAnswer('q-g12', 'D')">D. Have</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. Are</div>
+        【解説】複数主語「the researchers」＋現在分詞「studying」が続いているため、現在進行形の疑問文を作る <strong>Are</strong> が正解です。
+      </div>
+    </div>
+
+    <!-- Question 13 -->
+    <div class="question-card" id="q-g13">
+      <div class="question-text">13. The zoologist watched the mother panda carry ________ cub carefully across the stream.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g13', 'A')">A. her</button>
+        <button class="option-btn" onclick="checkAnswer('q-g13', 'B')">B. hers</button>
+        <button class="option-btn" onclick="checkAnswer('q-g13', 'C')">C. their</button>
+        <button class="option-btn" onclick="checkAnswer('q-g13', 'D')">D. they're</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. her</div>
+        【解説】単数メスの名詞「the mother panda」を修飾する所有格の <strong>her</strong> が入ります。
+      </div>
+    </div>
+
+    <!-- Question 14 -->
+    <div class="question-card" id="q-g14">
+      <div class="question-text">14. I ________ to that famous national park twice before to see rare birds.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g14', 'A')">A. have been</button>
+        <button class="option-btn" onclick="checkAnswer('q-g14', 'B')">B. been</button>
+        <button class="option-btn" onclick="checkAnswer('q-g14', 'C')">C. go</button>
+        <button class="option-btn" onclick="checkAnswer('q-g14', 'D')">D. gone</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. have been</div>
+        【解説】「twice before（以前に2度）」から「経験」を表す現在完了形 <strong>have been</strong> (to...) が正解です。
+      </div>
+    </div>
+
+    <!-- Question 15 -->
+    <div class="question-card" id="q-g15">
+      <div class="question-text">15. The government kept the wildlife reserve ________ to protect the endangered species.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g15', 'A')">A. closing</button>
+        <button class="option-btn" onclick="checkAnswer('q-g15', 'B')">B. in closing</button>
+        <button class="option-btn" onclick="checkAnswer('q-g15', 'C')">C. closed</button>
+        <button class="option-btn" onclick="checkAnswer('q-g15', 'D')">D. close</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. closed</div>
+        【解説】`keep + O + 過去分詞` で「Oを〜された状態に保つ」。「閉鎖される」受動の関係のため過去分詞 <strong>closed</strong> が正解です。
+      </div>
+    </div>
+
+    <!-- Question 16 -->
+    <div class="question-card" id="q-g16">
+      <div class="question-text">16. ________ the weather was harsh in the high mountains, the scientists did not cancel their field study.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g16', 'A')">A. But</button>
+        <button class="option-btn" onclick="checkAnswer('q-g16', 'B')">B. Thus</button>
+        <button class="option-btn" onclick="checkAnswer('q-g16', 'C')">C. Despite</button>
+        <button class="option-btn" onclick="checkAnswer('q-g16', 'D')">D. Although</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: D. Although</div>
+        【解説】後ろに節（主語＋動詞：the weather was harsh）が続いているため、接続詞の <strong>Although</strong>（〜だけれども）が入ります。Despiteは前置詞のため節を導けません。
+      </div>
+    </div>
+
+    <!-- Question 17 -->
+    <div class="question-card" id="q-g17">
+      <div class="question-text">17. There was no easy way to track the elusive animals in the dense forest, so the team gave up ________ them until spring.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g17', 'A')">A. search</button>
+        <button class="option-btn" onclick="checkAnswer('q-g17', 'B')">B. searched</button>
+        <button class="option-btn" onclick="checkAnswer('q-g17', 'C')">C. to search</button>
+        <button class="option-btn" onclick="checkAnswer('q-g17', 'D')">D. searching</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: D. searching</div>
+        【解説】熟語 `give up doing`（〜することを諦める/やめる）の形をとるため、動名詞の <strong>searching</strong> が入ります。
+      </div>
+    </div>
+
+    <!-- Question 18 -->
+    <div class="question-card" id="q-g18">
+      <div class="question-text">18. This semester's biology exam was ________ than last semester's one.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g18', 'A')">A. easy</button>
+        <button class="option-btn" onclick="checkAnswer('q-g18', 'B')">B. more easily</button>
+        <button class="option-btn" onclick="checkAnswer('q-g18', 'C')">C. easier</button>
+        <button class="option-btn" onclick="checkAnswer('q-g18', 'D')">D. more easier</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. easier</div>
+        【解説】後ろに接続詞 `than` があるため比較級が入ります。easyの比較級は <strong>easier</strong> です。
+      </div>
+    </div>
+  </div>
+
+  <!-- READING AND COMPREHENSION (10 QUESTIONS) -->
+  <div id="reading-section" class="tab-content">
+    <div class="section-title">Reading and Comprehension</div>
+    <div class="instructions">
+      <strong>Directions:</strong> In this part of the test, you will read and answer questions about some passages.
+    </div>
+
+    <!-- Passage -->
+    <div class="reading-passage">
+      <p>
+        <span class="line-num">1</span>For decades, giant pandas have served as unique international ambassadors for China. Under a political strategy known as "panda diplomacy," the Chinese government loans these rare animals to foreign zoos as a symbol of friendship, goodwill, and trade partnerships. Thousands of visitors line up at zoos around the world each year to catch a glimpse of the iconic black-and-white bears. <span class="highlight-word">They</span> are instructed not to make loud noises or use flash photography near the enclosures. For foreign cities, housing a giant panda brings massive public excitement and economic profit; <span class="highlight-word">it</span> also strengthens diplomatic ties with Beijing. However, renting pandas is not free. Foreign zoos must pay an annual fee of up to one million dollars per pair, and any cubs born overseas remain the legal property of China and must be returned after a few years according to the posted rules.
+      </p>
+      <p>
+        <span class="line-num">10</span>The environmental impact of panda diplomacy, however, remains a subject of debate. Wildlife conservationists point out that the high rental fees paid by foreign institutions are <span class="highlight-word">restricted</span> to funding wild panda protection and habitat restoration inside China. Through these funds, China has built dozens of natural reserves, which helped upgrade the giant panda's status from "endangered" to "vulnerable" on global wildlife lists. Like other charismatic megafauna, giant pandas act as an "umbrella species"—protecting their bamboo forest habitat automatically saves countless smaller mammals, birds, and insects sharing the same ecosystem.
+      </p>
+      <p>
+        <span class="line-num">18</span>Because of the giant panda's political sensitivity and complex biology, keeping them in captivity requires specialized care and controversy often arises. Political activists and animal welfare groups have sometimes criticized panda loans. Some argue that long-distance transport and unfamiliar climates subject the bears to severe stress—during past political tensions between countries, loan agreements have even been canceled or delayed. Some critics go as far as calling panda diplomacy an unethical exploitation of wildlife for political leverage, arguing that these gentle creatures should live freely in the wild rather than being used as diplomatic instruments.
+      </p>
+    </div>
+
+    <!-- Question 19 -->
+    <div class="question-card" id="q-r1">
+      <div class="question-text">19. Which of the following can best be inferred from the passage?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r1', 'A')">A. Giant pandas are easily found in most wild forests around the world.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r1', 'B')">B. Foreign zoos are allowed to keep panda cubs permanently if they are born overseas.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r1', 'C')">C. Political disputes between nations can affect international panda loan agreements.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r1', 'D')">D. Wildlife activists believe pandas should be trained to perform for zoo visitors.</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. Political disputes between nations can affect international panda loan agreements.</div>
+        【解説】第3段落の「during past political tensions... loan agreements have even been canceled or delayed（国家間の政治的緊張の際、貸与協定が取消・遅延された）」から、政治的対立がパンダの貸与協定に影響を与えることが推論できます。
+      </div>
+    </div>
+
+    <!-- Question 20 -->
+    <div class="question-card" id="q-r2">
+      <div class="question-text">20. In paragraph 1, the word <span class="underline-text">They</span> refers to which of the following?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r2', 'A')">A. Ambassadors</button>
+        <button class="option-btn" onclick="checkAnswer('q-r2', 'B')">B. Visitors</button>
+        <button class="option-btn" onclick="checkAnswer('q-r2', 'C')">C. Giant pandas</button>
+        <button class="option-btn" onclick="checkAnswer('q-r2', 'D')">D. Foreign zoos</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. Visitors</div>
+        【解説】直前の文「Thousands of visitors line up...（何千もの来訪者が並ぶ）」を受けて、「（来訪者たちは）大きな声を出したりフラッシュ撮影をしないよう指導される」となるため、<strong>Visitors</strong> を指します。
+      </div>
+    </div>
+
+    <!-- Question 21 -->
+    <div class="question-card" id="q-r3">
+      <div class="question-text">21. Which of the following do visitors at foreign zoos NOT do, according to the passage?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r3', 'A')">A. Line up to see the pandas</button>
+        <button class="option-btn" onclick="checkAnswer('q-r3', 'B')">B. Take flash photos near panda enclosures</button>
+        <button class="option-btn" onclick="checkAnswer('q-r3', 'C')">C. Bring economic profit to the local city</button>
+        <button class="option-btn" onclick="checkAnswer('q-r3', 'D')">D. Show excitement about seeing giant pandas</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. Take flash photos near panda enclosures</div>
+        【解説】第1段落に「instructed not to ... use flash photography（フラッシュ撮影をしないよう指導される）」と記載されているため、B（フラッシュ撮影をすること）は「行わないこと」に該当します。
+      </div>
+    </div>
+
+    <!-- Question 22 -->
+    <div class="question-card" id="q-r4">
+      <div class="question-text">22. In paragraph 1, the word <span class="underline-text">it</span> refers to which of the following?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r4', 'A')">A. An annual fee</button>
+        <button class="option-btn" onclick="checkAnswer('q-r4', 'B')">B. Housing a giant panda</button>
+        <button class="option-btn" onclick="checkAnswer('q-r4', 'C')">C. A trade partnership</button>
+        <button class="option-btn" onclick="checkAnswer('q-r4', 'D')">D. Flash photography</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. Housing a giant panda</div>
+        【解説】前文の動名詞句「housing a giant panda（ジャイアントパンダを飼育・寄託すること）」が、経済的利益をもたらすだけでなく、外交関係を強化すること（it）を指しています。
+      </div>
+    </div>
+
+    <!-- Question 23 -->
+    <div class="question-card" id="q-r5">
+      <div class="question-text">23. In paragraph 2, the word <span class="underline-text">restricted</span> is closest in meaning to</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r5', 'A')">A. limited</button>
+        <button class="option-btn" onclick="checkAnswer('q-r5', 'B')">B. announced</button>
+        <button class="option-btn" onclick="checkAnswer('q-r5', 'C')">C. expanded</button>
+        <button class="option-btn" onclick="checkAnswer('q-r5', 'D')">D. moved</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. limited</div>
+        【解説】「restricted（〜に制限されている/限定されている）」に最も近い意味を持つ単語は <strong>limited</strong> です。
+      </div>
+    </div>
+
+    <!-- Question 24 -->
+    <div class="question-card" id="q-r6">
+      <div class="question-text">24. According to the passage, giant pandas are described as an "umbrella species" because protecting them</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r6', 'A')">A. allows them to live safely in cold rainy climates</button>
+        <button class="option-btn" onclick="checkAnswer('q-r6', 'B')">B. requires zookeepers to build large protective shelters</button>
+        <button class="option-btn" onclick="checkAnswer('q-r6', 'C')">C. helps preserve other wild animals sharing the same environment</button>
+        <button class="option-btn" onclick="checkAnswer('q-r6', 'D')">D. guarantees that panda cubs born overseas will not be returned</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. helps preserve other wild animals sharing the same environment</div>
+        【解説】第2段落文末の「protecting their bamboo forest habitat automatically saves countless smaller mammals...（竹林の生息地を守ることが自動的に同じ生態系を共有する他の動物を救う）」からCが正解です。
+      </div>
+    </div>
+
+    <!-- Question 25 -->
+    <div class="question-card" id="q-r7">
+      <div class="question-text">25. The rental fees paid by foreign zoos have helped China do all of the following EXCEPT</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r7', 'A')">A. build natural wildlife reserves</button>
+        <button class="option-btn" onclick="checkAnswer('q-r7', 'B')">B. restore wild panda habitats</button>
+        <button class="option-btn" onclick="checkAnswer('q-r7', 'C')">C. fund wild panda protection projects</button>
+        <button class="option-btn" onclick="checkAnswer('q-r7', 'D')">D. pay for long-distance transport of other animals</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: D. pay for long-distance transport of other animals</div>
+        【解説】第2段落に記載されている資金使途に含まれないものはD「他の動物の長距離輸送の費用を払うこと」です。
+      </div>
+    </div>
+
+    <!-- Question 26 -->
+    <div class="question-card" id="q-r8">
+      <div class="question-text">26. According to the passage, some animal welfare activists believe that</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r8', 'A')">A. foreign zoos should pay higher annual rental fees</button>
+        <button class="option-btn" onclick="checkAnswer('q-r8', 'B')">B. pandas should live freely in the wild rather than being leased</button>
+        <button class="option-btn" onclick="checkAnswer('q-r8', 'C')">C. giant pandas do not suffer stress during long-distance transportation</button>
+        <button class="option-btn" onclick="checkAnswer('q-r8', 'D')">D. panda diplomacy is the best way to preserve global biodiversity</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. pandas should live freely in the wild rather than being leased</div>
+        【解説】第3段落最後の文「arguing that these gentle creatures should live freely in the wild rather than being used as diplomatic instruments（外交手段として使われるより野生で自由に生きるべきと主張する）」からBが正解です。
+      </div>
+    </div>
+
+    <!-- Question 27 -->
+    <div class="question-card" id="q-r9">
+      <div class="question-text">27. In paragraph 1, which noun means "a country's official representative sent to a foreign nation"?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'A')">A. ambassador</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'B')">B. partnership</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'C')">C. enclosure</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'D')">D. strategy</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. ambassador</div>
+        【解説】「他国に派遣される国の公式な代表者」という定義に当てはまる名詞は第1段落1行目の <strong>ambassador</strong>（大使、使節）です。
+      </div>
+    </div>
+
+    <!-- Question 28 -->
+    <div class="question-card" id="q-r10">
+      <div class="question-text">28. What is the main idea of paragraph 2?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'A')">A. Giant pandas are extremely expensive for foreign zoos to maintain.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'B')">B. Panda diplomacy has helped fund environmental conservation and habitat protection.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'C')">C. Political arguments between nations often delay panda loan agreements.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'D')">D. Visitors at foreign zoos enjoy taking photos of giant pandas.</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. Panda diplomacy has helped fund environmental conservation and habitat protection.</div>
+        【解説】第2段落は、パンダ外交によって得られたレンタル料が中国国内の環境保護区の設立や野生パンダの保護活動資金（アンブレラスピーシーズとしての役割）に役立っているという環境的側面を述べています。
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+
+    tablinks = document.getElementsByClassName("tab-btn");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+
+    document.getElementById(tabName).style.display = "block";
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  function checkAnswer(questionId, selectedLetter) {
+    const card = document.getElementById(questionId);
+    const buttons = card.querySelectorAll('.option-btn');
+    const explanation = card.querySelector('.explanation');
+    
+    const correctMatch = explanation.innerHTML.match(/正解:\s*([A-D])/);
+    if (!correctMatch) return;
+    const correctLetter = correctMatch[1];
+
+    buttons.forEach(btn => {
+      btn.disabled = true;
+      const btnText = btn.innerText.trim();
+      
+      if (btnText.startsWith(correctLetter)) {
+        btn.classList.add('correct');
+      }
+      if (btnText.startsWith(selectedLetter) && selectedLetter !== correctLetter) {
+        btn.classList.add('incorrect');
+      }
+    });
+
+    explanation.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
