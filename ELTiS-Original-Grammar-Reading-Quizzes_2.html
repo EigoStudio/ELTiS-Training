@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELTiS Practice Test - Grammar & Reading (Original)</title>
+<style>
+  :root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #27ae60;
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #cccccc;
+  }
+
+  body {
+    font-family: 'Segoe UI', Georgia, 'Times New Roman', Times, serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 850px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    color: var(--primary-color);
+    margin: 0;
+  }
+
+  .print-btn {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .print-btn:hover {
+    background-color: #2980b9;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 10px;
+    background: #e9ecef;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #495057;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tab-btn.active {
+    background: var(--secondary-color);
+    color: white;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+  }
+
+  .instructions {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    background-color: #f1f3f5;
+  }
+
+  .reading-passage {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    text-align: justify;
+  }
+
+  .reading-passage p {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-indent: 1.5em;
+  }
+
+  .line-num {
+    font-size: 0.8rem;
+    color: #777;
+    font-weight: normal;
+    display: inline-block;
+    width: 25px;
+    text-indent: 0;
+  }
+
+  .highlight-word {
+    font-weight: bold;
+    background-color: #e2e8f0;
+    padding: 2px 4px;
+    border-bottom: 2px solid var(--primary-color);
+  }
+
+  .underline-text {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+
+  .question-card {
+    margin-bottom: 25px;
+    page-break-inside: avoid;
+  }
+
+  .question-text {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-left: 15px;
+  }
+
+  .option-btn {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-family: 'Times New Roman', Times, serif;
+    transition: all 0.2s ease;
+  }
+
+  .option-btn:hover {
+    background-color: #eef6fc;
+    border-color: var(--secondary-color);
+  }
+
+  .option-btn.correct {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+    color: #155724;
+    font-weight: bold;
+  }
+
+  .option-btn.incorrect {
+    background-color: #f8d7da !important;
+    border-color: #dc3545 !important;
+    color: #721c24;
+  }
+
+  .explanation {
+    display: none;
+    margin-top: 10px;
+    padding: 12px 15px;
+    background-color: #e8f4f8;
+    border-left: 4px solid var(--secondary-color);
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+
+  .explanation-title {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 4px;
+  }
+
+  @media print {
+    body {
+      background-color: white;
+      padding: 0;
+      font-size: 11pt;
+    }
+
+    .container {
+      max-width: 100%;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .header-container h1 {
+      font-size: 1.2rem;
+    }
+
+    .print-btn, .tabs, .explanation {
+      display: none !important;
+    }
+
+    .tab-content {
+      display: block !important;
+      page-break-after: always;
+    }
+
+    .tab-content:last-child {
+      page-break-after: auto;
+    }
+
+    .instructions {
+      background-color: transparent;
+      border: 1px solid #000;
+    }
+
+    .reading-passage {
+      border: 1px solid #000;
+      padding: 15px;
+    }
+
+    .option-btn {
+      border: none;
+      padding: 2px 0;
+      background: transparent !important;
+      color: black !important;
+    }
+
+    .question-card {
+      margin-bottom: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-container">
+    <h1>ELTiS Practice Test</h1>
+    <button class="print-btn" onclick="window.print()">印刷する (PDF出力)</button>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="openTab(event, 'grammar-section')">Grammar (8問)</button>
+    <button class="tab-btn" onclick="openTab(event, 'reading-section')">Reading and Comprehension (10問)</button>
+  </div>
+
+  <!-- GRAMMAR (8 ORIGINAL QUESTIONS: Q1 - Q8) -->
+  <div id="grammar-section" class="tab-content active">
+    <div class="section-title">Grammar</div>
+    <div class="instructions">
+      <strong>Directions:</strong> In this part of the test, you will read some sentences and choose the best answer to complete each sentence.
+    </div>
+
+    <!-- Question 1 (正解: C) - 科学的事実・三人称単数現在 -->
+    <div class="question-card" id="q-g1">
+      <div class="question-text">1. Pure gold ________ at approximately 1,064 degrees Celsius.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'A')">A. melting</button>
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'B')">B. melt</button>
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'C')">C. melts</button>
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'D')">D. to melt</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. melts</div>
+        【解説】不可算名詞（単数扱い）の Pure gold が主語で、科学的事実（不変の真理）を表すため、三人称単数現在形の <strong>melts</strong>（溶ける）が入ります。
+      </div>
+    </div>
+
+    <!-- Question 2 (正解: A) - 目的語をとるto不定詞 (plan to do) -->
+    <div class="question-card" id="q-g2">
+      <div class="question-text">2. Why did the museum directors plan ________ a new exhibit on renewable energy next month?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'A')">A. to open</button>
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'B')">B. opening</button>
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'C')">C. open</button>
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'D')">D. opened</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. to open</div>
+        【解説】動詞 `plan` は目的語に to不定詞 をとるため、<strong>to open</strong>（開設すること）が正解です。
+      </div>
+    </div>
+
+    <!-- Question 3 (正解: D) - 所有格代名詞 -->
+    <div class="question-card" id="q-g3">
+      <div class="question-text">3. That modern solar oven was the most efficient device in ________ laboratory.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'A')">A. ours</button>
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'B')">B. us</button>
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'C')">C. we</button>
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'D')">D. their</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: D. their</div>
+        【解説】後ろの名詞 laboratory を修飾する所有格 <strong>their</strong>（彼らの）が入ります。（A: ours は所有代名詞「私たちのもの」なので名詞の前に置けません）
+      </div>
+    </div>
+
+    <!-- Question 4 (正解: B) - 動名詞をとる慣用表現 (would you mind doing) -->
+    <div class="question-card" id="q-g4">
+      <div class="question-text">4. Would you mind ________ the volume on the radio while I am taking this phone call?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'A')">A. lower</button>
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'B')">B. lowering</button>
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'C')">C. to lower</button>
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'D')">D. lowered</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. lowering</div>
+        【解説】`Would you mind doing...?`（〜していただけますか）の表現。`mind` の目的語には動名詞をとるため <strong>lowering</strong>（下げること）が正解です。
+      </div>
+    </div>
+
+    <!-- Question 5 (正解: D) - 副詞の比較級 -->
+    <div class="question-card" id="q-g5">
+      <div class="question-text">5. The updated software process completed the calculations ________ than the previous version.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'A')">A. smooth</button>
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'B')">B. smoothly</button>
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'C')">C. smoothest</button>
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'D')">D. more smoothly</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: D. more smoothly</div>
+        【解説】動詞 completed を修飾する副詞 smoothly の比較級。接続詞 `than` があるため <strong>more smoothly</strong> が正解です。
+      </div>
+    </div>
+
+    <!-- Question 6 (正解: B) - 主語を修飾する分詞構文/形容詞フレーズ -->
+    <div class="question-card" id="q-g6">
+      <div class="question-text">6. Look at the bright stars ________ across the clear night sky above the observatory.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'A')">A. is shining</button>
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'B')">B. shining</button>
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'C')">C. shone</button>
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'D')">D. shine</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. shining</div>
+        【解説】`Look at + 名詞 + 現在分詞`（〜が…しているのを見る）の形。名詞 the bright stars を後置修飾する現在分詞 <strong>shining</strong>（輝いている）が正解です。
+      </div>
+    </div>
+
+    <!-- Question 7 (正解: A) - 分詞構文 -->
+    <div class="question-card" id="q-g7">
+      <div class="question-text">7. ________ to discover a cleaner source of energy, the researchers worked tirelessly in the lab.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'A')">A. Hoping</button>
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'B')">B. Hope</button>
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'C')">C. They hope</button>
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'D')">D. To be hoped</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. Hoping</div>
+        【解説】「〜することを望んで」という意味を作る分詞構文。現在分詞の <strong>Hoping</strong> が文頭に入ります。
+      </div>
+    </div>
+
+    <!-- Question 8 (正解: C) - 仮定法過去完了 -->
+    <div class="question-card" id="q-g8">
+      <div class="question-text">8. If the team ________ the warning signs earlier, they could have prevented the equipment breakdown.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'A')">A. notices</button>
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'B')">B. noticed</button>
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'C')">C. had noticed</button>
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'D')">D. might notice</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. had noticed</div>
+        【解説】帰結節が `could have prevented`（仮定法過去完了：〜できただろうに）となっているため、If節内は `had + 過去分詞` の <strong>had noticed</strong> が正解です。
+      </div>
+    </div>
+  </div>
+
+  <!-- READING AND COMPREHENSION (10 ORIGINAL QUESTIONS: Q9 - Q18) -->
+  <div id="reading-section" class="tab-content">
+    <div class="section-title">Reading and Comprehension</div>
+    <div class="instructions">
+      <strong>Directions:</strong> In this part of the test, you will read and answer questions about some passages.
+    </div>
+
+    <!-- Passage: The History of the Microwave Oven -->
+    <div class="reading-passage">
+      <p>
+        <span class="line-num">1</span>Modern kitchens are filled with automated devices designed to make daily food preparation faster and easier. Among these, the microwave oven is perhaps one of the most remarkable inventions of the twentieth century. Surprisingly, <span class="highlight-word">one</span> was not created intentionally for cooking, but was instead discovered entirely by accident during military research. In 1945, an American engineer named Percy Spencer was working on active radar technology using a power tube called a magnetron. While standing near the operating machine, he noticed that a chocolate bar in his pocket had melted. Intrigued by this unusual reaction, Spencer decided to experiment further by placing corn kernels near the tube, which quickly popped into popcorn.
+      </p>
+      <p>
+        <span class="line-num">10</span>Recognizing the massive commercial potential, Spencer's employer, the Raytheon Corporation, filed a patent for the microwave cooking process in 1945. The first commercial microwave oven, named the "Radarange," was introduced two years later. However, <span class="highlight-word">it</span> was far from practical for home use. The unit stood nearly six feet tall, weighed over 750 pounds, and cost nearly $5,000—an enormous sum at the time. Furthermore, early models required expensive water cooling systems. Consequently, these giant machines were initially bought only by commercial venues such as restaurants, passenger ships, and military institutions that needed to heat large quantities of food rapidly.
+      </p>
+      <p>
+        <span class="line-num">18</span>It took two more decades of technological advances to bring microwave ovens into average households. By the late 1960s, engineers had developed smaller, air-cooled magnetrons, enabling manufacturers to produce compact countertop models at affordable prices. As women increasingly joined the workforce and daily lifestyles accelerated, families <span class="highlight-word">emulated</span> the trend toward quick-prep meals. By the late 1970s, the appliance had become a standard fixture in American homes. Today, the microwave oven symbolizes the shift toward modern convenience, fundamentally changing how food is stored, prepared, and enjoyed around the world.
+      </p>
+    </div>
+
+    <!-- Question 9 (正解: B) - Main Idea -->
+    <div class="question-card" id="q-r9">
+      <div class="question-text">9. What does this passage mainly discuss?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'A')">A. The military applications of radar technology in World War II.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'B')">B. The accidental discovery and evolution of the microwave oven.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'C')">C. The changing roles of women in the workforce during the 1970s.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'D')">D. The financial risks of manufacturing expensive home electronics.</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. The accidental discovery and evolution of the microwave oven.</div>
+        【解説】文章全体を通して「電子レンジが偶然発見され、大型商用機から一般家庭に普及していく過程」を述べています。
+      </div>
+    </div>
+
+    <!-- Question 10 (正解: C) - Pronoun (one) -->
+    <div class="question-card" id="q-r10">
+      <div class="question-text">10. In paragraph 1, the word <span class="underline-text">one</span> refers to</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'A')">A. a daily food preparation</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'B')">B. an automated device</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'C')">C. a microwave oven</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'D')">D. active radar technology</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. a microwave oven</div>
+        【解説】直前の文「...the microwave oven is perhaps one of the most remarkable inventions...」を受けて「驚くことに、（電子レンジは）調理用に作られたのではなかった」と続くため、<strong>a microwave oven</strong> を指します。
+      </div>
+    </div>
+
+    <!-- Question 11 (正解: D) - Fact -->
+    <div class="question-card" id="q-r11">
+      <div class="question-text">11. According to the passage, Percy Spencer first noticed the heating effect of the magnetron because</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'A')">A. corn kernels began popping in his kitchen</button>
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'B')">B. his water cooling system stopped working properly</button>
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'C')">C. a radar screen registered high temperatures</button>
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'D')">D. a chocolate bar in his pocket melted near the machine</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: D. a chocolate bar in his pocket melted near the machine</div>
+        【解説】第1段落「he noticed that a chocolate bar in his pocket had melted」からDが正解です。
+      </div>
+    </div>
+
+    <!-- Question 12 (正解: A) - Pronoun (it) -->
+    <div class="question-card" id="q-r12">
+      <div class="question-text">12. In paragraph 2, the word <span class="underline-text">it</span> refers to which of the following?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'A')">A. The first commercial microwave oven</button>
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'B')">B. The Raytheon Corporation</button>
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'C')">C. The microwave cooking process</button>
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'D')">D. An enormous sum of money</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. The first commercial microwave oven</div>
+        【解説】直前の「The first commercial microwave oven, named the 'Radarange'」を指しており、それが家庭用には実用的ではなかったと続いています。
+      </div>
+    </div>
+
+    <!-- Question 13 (正解: C) - Fact -->
+    <div class="question-card" id="q-r13">
+      <div class="question-text">13. According to paragraph 2, early microwave ovens were NOT suitable for regular home kitchens because they</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'A')">A. took too much time to heat meals</button>
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'B')">B. could only be operated by military technicians</button>
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'C')">C. were extremely large, heavy, and expensive</button>
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'D')">D. consumed more water than electricity</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. were extremely large, heavy, and expensive</div>
+        【解説】第2段落「stood nearly six feet tall, weighed over 750 pounds, and cost nearly $5,000」の記述からCが当てはまります。
+      </div>
+    </div>
+
+    <!-- Question 14 (正解: B) - Inference -->
+    <div class="question-card" id="q-r14">
+      <div class="question-text">14. It can be inferred from paragraph 2 that the early "Radarange" was mainly purchased by</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'A')">A. suburban families with working mothers</button>
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'B')">B. businesses and organizations requiring large-scale food heating</button>
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'C')">C. electronics stores attempting to resell them</button>
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'D')">D. individual scientists working on radar systems</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. businesses and organizations requiring large-scale food heating</div>
+        【解説】第2段落文末「bought only by commercial venues such as restaurants, passenger ships, and military institutions...」からBが推論されます。
+      </div>
+    </div>
+
+    <!-- Question 15 (正解: A) - Author's Purpose -->
+    <div class="question-card" id="q-r15">
+      <div class="question-text">15. Why does the author mention "water cooling systems" in paragraph 2?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'A')">A. To highlight another factor that made early microwaves impractical for homes.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'B')">B. To explain how magnetron power tubes were invented.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'C')">C. To argue that water cooling was safer than air cooling.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'D')">D. To prove that early electronics used too much tap water.</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. To highlight another factor that made early microwaves impractical for homes.</div>
+        【解説】「Furthermore...」に続いて「初期型が水冷システムを必要とし高価だった（＝家庭普及のハードルだった）」ことを補足するために言及されています。
+      </div>
+    </div>
+
+    <!-- Question 16 (正解: D) - Inference -->
+    <div class="question-card" id="q-r16">
+      <div class="question-text">16. Which of the following statements can best be inferred from the passage?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'A')">A. Percy Spencer won a Nobel Prize for discovering popcorn.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'B')">B. Microwave ovens were widely used in homes immediately after World War II.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'C')">C. Early radar systems were primary built for kitchen appliances.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'D')">D. Technological improvements in magnetrons helped lower the price and size of microwaves.</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: D. Technological improvements in magnetrons helped lower the price and size of microwaves.</div>
+        【解説】第3段落「engineers had developed smaller, air-cooled magnetrons, enabling manufacturers to produce compact countertop models at affordable prices」からDが推論できます。
+      </div>
+    </div>
+
+    <!-- Question 17 (正解: A) - Vocabulary -->
+    <div class="question-card" id="q-r17">
+      <div class="question-text">17. In paragraph 3, the word <span class="underline-text">emulated</span> is closest in meaning to</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'A')">A. followed or adopted</button>
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'B')">B. rejected or ignored</button>
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'C')">C. delayed</button>
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'D')">D. criticized</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. followed or adopted</div>
+        【解説】`emulate`（真似る、見習う、倣う）に最も近い意味は <strong>followed or adopted</strong> です。
+      </div>
+    </div>
+
+    <!-- Question 18 (正解: C) - Definition -->
+    <div class="question-card" id="q-r18">
+      <div class="question-text">18. In paragraph 1, which noun means "a device or instrument used to detect distant objects using radio waves"?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'A')">A. kernel</button>
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'B')">B. patent</button>
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'C')">C. radar</button>
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'D')">D. appliance</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. radar</div>
+        【解説】「電波を使って遠方の物体を検知する装置」という定義に合致する名詞は第1段落の <strong>radar</strong>（レーダー）です。
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+
+    tablinks = document.getElementsByClassName("tab-btn");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+
+    document.getElementById(tabName).style.display = "block";
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  function checkAnswer(questionId, selectedLetter) {
+    const card = document.getElementById(questionId);
+    const buttons = card.querySelectorAll('.option-btn');
+    const explanation = card.querySelector('.explanation');
+    
+    const correctMatch = explanation.innerHTML.match(/正解:\s*([A-D])/);
+    if (!correctMatch) return;
+    const correctLetter = correctMatch[1];
+
+    buttons.forEach(btn => {
+      btn.disabled = true;
+      const btnText = btn.innerText.trim();
+      
+      if (btnText.startsWith(correctLetter)) {
+        btn.classList.add('correct');
+      }
+      if (btnText.startsWith(selectedLetter) && selectedLetter !== correctLetter) {
+        btn.classList.add('incorrect');
+      }
+    });
+
+    explanation.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

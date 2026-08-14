@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELTiS Practice Test - Grammar & Reading (Series)</title>
+<style>
+  :root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #27ae60;
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #cccccc;
+  }
+
+  body {
+    font-family: 'Segoe UI', Georgia, 'Times New Roman', Times, serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 850px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    color: var(--primary-color);
+    margin: 0;
+  }
+
+  .print-btn {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .print-btn:hover {
+    background-color: #2980b9;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 10px;
+    background: #e9ecef;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #495057;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tab-btn.active {
+    background: var(--secondary-color);
+    color: white;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+  }
+
+  .instructions {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    background-color: #f1f3f5;
+  }
+
+  .reading-passage {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    text-align: justify;
+  }
+
+  .reading-passage p {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-indent: 1.5em;
+  }
+
+  .line-num {
+    font-size: 0.8rem;
+    color: #777;
+    font-weight: normal;
+    display: inline-block;
+    width: 25px;
+    text-indent: 0;
+  }
+
+  .highlight-word {
+    font-weight: bold;
+    background-color: #e2e8f0;
+    padding: 2px 4px;
+    border-bottom: 2px solid var(--primary-color);
+  }
+
+  .underline-text {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+
+  .question-card {
+    margin-bottom: 25px;
+    page-break-inside: avoid;
+  }
+
+  .question-text {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-left: 15px;
+  }
+
+  .option-btn {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-family: 'Times New Roman', Times, serif;
+    transition: all 0.2s ease;
+  }
+
+  .option-btn:hover {
+    background-color: #eef6fc;
+    border-color: var(--secondary-color);
+  }
+
+  .option-btn.correct {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+    color: #155724;
+    font-weight: bold;
+  }
+
+  .option-btn.incorrect {
+    background-color: #f8d7da !important;
+    border-color: #dc3545 !important;
+    color: #721c24;
+  }
+
+  .explanation {
+    display: none;
+    margin-top: 10px;
+    padding: 12px 15px;
+    background-color: #e8f4f8;
+    border-left: 4px solid var(--secondary-color);
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+
+  .explanation-title {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 4px;
+  }
+
+  @media print {
+    body {
+      background-color: white;
+      padding: 0;
+      font-size: 11pt;
+    }
+
+    .container {
+      max-width: 100%;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .header-container h1 {
+      font-size: 1.2rem;
+    }
+
+    .print-btn, .tabs, .explanation {
+      display: none !important;
+    }
+
+    .tab-content {
+      display: block !important;
+      page-break-after: always;
+    }
+
+    .tab-content:last-child {
+      page-break-after: auto;
+    }
+
+    .instructions {
+      background-color: transparent;
+      border: 1px solid #000;
+    }
+
+    .reading-passage {
+      border: 1px solid #000;
+      padding: 15px;
+    }
+
+    .option-btn {
+      border: none;
+      padding: 2px 0;
+      background: transparent !important;
+      color: black !important;
+    }
+
+    .question-card {
+      margin-bottom: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-container">
+    <h1>ELTiS Practice Test</h1>
+    <button class="print-btn" onclick="window.print()">印刷する (PDF出力)</button>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="openTab(event, 'grammar-section')">Grammar (8問)</button>
+    <button class="tab-btn" onclick="openTab(event, 'reading-section')">Reading and Comprehension (10問)</button>
+  </div>
+
+  <!-- GRAMMAR (8 ORIGINAL QUESTIONS: Q1 - Q8) -->
+  <div id="grammar-section" class="tab-content active">
+    <div class="section-title">Grammar</div>
+    <div class="instructions">
+      <strong>Directions:</strong> In this part of the test, you will read some sentences and choose the best answer to complete each sentence.
+    </div>
+
+    <!-- Question 1 (正解: B) -->
+    <div class="question-card" id="q-g1">
+      <div class="question-text">1. The tourists waiting in front of the historic library ________ quiet.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'A')">A. is</button>
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'B')">B. are</button>
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'C')">C. was</button>
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'D')">D. has been</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. are</div>
+        【解説】主語は複数名詞の `The tourists`（修飾語句：waiting in front of...）のため、複数に対応する be動詞 <strong>are</strong> が入ります。
+      </div>
+    </div>
+
+    <!-- Question 2 (正解: C) -->
+    <div class="question-card" id="q-g2">
+      <div class="question-text">2. ________ you enjoy listening to classical music after studying?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'A')">A. Were</button>
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'B')">B. Does</button>
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'C')">C. Do</button>
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'D')">D. Have</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. Do</div>
+        【解説】一般動詞 `enjoy` の二人称（you）に対する現在形の疑問文を作るため、<strong>Do</strong> が正解です。
+      </div>
+    </div>
+
+    <!-- Question 3 (正解: B) -->
+    <div class="question-card" id="q-g3">
+      <div class="question-text">3. Complicated math explanations often make the students ________.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'A')">A. confusion</button>
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'B')">B. confused</button>
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'C')">C. is confusing</button>
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'D')">D. to confuse</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. confused</div>
+        【解説】`make + 目的語 + 形容詞`（Oを〜な状態にする）。人間（the students）が混乱させられる感情・状態を表すため、過去分詞形容詞の <strong>confused</strong>（戸惑って、困惑して）が正解です。
+      </div>
+    </div>
+
+    <!-- Question 4 (正解: A) -->
+    <div class="question-card" id="q-g4">
+      <div class="question-text">4. ________ this poem written by a famous American author in the 1950s?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'A')">A. Was</button>
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'B')">B. Does</button>
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'C')">C. Will</button>
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'D')">D. Can</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. Was</div>
+        【解説】過去の受動態（was/were + 過去分詞）の疑問文。「この詩は書かれましたか」という意味を作るため、単数主語 this poem に対応する <strong>Was</strong> が正解です。
+      </div>
+    </div>
+
+    <!-- Question 5 (正解: D) -->
+    <div class="question-card" id="q-g5">
+      <div class="question-text">5. The principal decided ________ the students a longer lunch break on Friday.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'A')">A. give</button>
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'B')">B. is giving</button>
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'C')">C. giving</button>
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'D')">D. to give</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: D. to give</div>
+        【解説】動詞 `decide` は目的語に to不定詞 をとるため、<strong>to give</strong> が正解です。
+      </div>
+    </div>
+
+    <!-- Question 6 (正解: C) -->
+    <div class="question-card" id="q-g6">
+      <div class="question-text">6. This is the museum ________ displays rare manuscripts from the nineteenth century.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'A')">A. where</button>
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'B')">B. in which</button>
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'C')">C. which</button>
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'D')">D. where is</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. which</div>
+        【解説】空欄の後ろに動詞 `displays` が続いているため、主格の関係代名詞 <strong>which</strong> が正解です。（先行詞が場所であっても節内に主語が欠けている場合は関係代名詞となります）
+      </div>
+    </div>
+
+    <!-- Question 7 (正解: A) -->
+    <div class="question-card" id="q-g7">
+      <div class="question-text">7. This is the quiet town ________ the famous novelist wrote his best-selling book.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'A')">A. where</button>
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'B')">B. in which is</button>
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'C')">C. which</button>
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'D')">D. where is</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. where</div>
+        【解説】空欄の後ろに「主語＋動詞＋目的語（the famous novelist wrote his...）」の完全な文が続いているため、場所を表す関係副詞 <strong>where</strong> が入ります。
+      </div>
+    </div>
+
+    <!-- Question 8 (正解: A) -->
+    <div class="question-card" id="q-g8">
+      <div class="question-text">8. If David had practiced harder, he ________ the first prize in the piano competition.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'A')">A. could have won</button>
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'B')">B. could win</button>
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'C')">C. won</button>
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'D')">D. wins</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. could have won</div>
+        【解説】If節が `had practiced`（仮定法過去完了）となっているため、帰結節には `助動詞の過去形 + have + 過去分詞` の <strong>could have won</strong> が入ります。
+      </div>
+    </div>
+  </div>
+
+  <!-- READING AND COMPREHENSION (10 ORIGINAL QUESTIONS: Q9 - Q18) -->
+  <div id="reading-section" class="tab-content">
+    <div class="section-title">Reading and Comprehension</div>
+    <div class="instructions">
+      <strong>Directions:</strong> In this part of the test, you will read and answer questions about some passages.
+    </div>
+
+    <!-- Passage: J. D. Salinger and The Catcher in the Rye -->
+    <div class="reading-passage">
+      <p>
+        <span class="line-num">1</span>A deep fascination with youth, alienation, and the search for identity defined the literary career of J. D. Salinger (1919–2010). Raised in New York City, he began writing short stories during his college years, displaying an early talent for authentic dialogue and emotional depth. During World War II, Salinger served in the U.S. Army and experienced the horrors of combat in Europe. These traumatic events deeply affected his world view, shaping his focus on vulnerable young characters trying to navigate a confusing, insincere adult world.
+      </p>
+      <p>
+        <span class="line-num">10</span>In 1951, Salinger published his masterwork, <em>The Catcher in the Rye</em>. The novel follows Holden Caulfield, a disillusioned sixteen-year-old boy wandering New York City after being expelled from his prep school. Holden’s honest voice and sharp criticism of social hypocrisy quickly struck a powerful chord with teenage readers across America. Despite this success—or perhaps because of it—the book sparked intense debate. Some school boards and libraries banned the novel due to its informal language and rebellious tone. Nevertheless, Salinger’s unique literary style won <span class="highlight-word">stunning</span> praise from major critics, establishing the novel as a landmark achievement in modern American literature.
+      </p>
+      <p>
+        <span class="line-num">18</span>Overwhelmed by sudden international fame and public scrutiny, Salinger made a surprising choice. He retreated from public life to a secluded home in New Hampshire, publishing very little after the mid-1960s. Although <span class="highlight-word">he</span> avoided journalists and refused public appearances for the rest of his life, his famous novel continued to sell millions of copies worldwide. Today, <em>The Catcher in the Rye</em> remains a permanent fixture on high school reading lists, symbolizing the universal experience of teenage struggle and personal growth.
+      </p>
+    </div>
+
+    <!-- Question 9 (正解: D) -->
+    <div class="question-card" id="q-r9">
+      <div class="question-text">9. This passage mainly discusses</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'A')">A. college education in New York City during the 1940s</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'B')">B. the military strategies of the U.S. Army during World War II</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'C')">C. why American libraries frequently ban controversial novels</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'D')">D. the life and literary impact of J. D. Salinger</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: D. the life and literary impact of J. D. Salinger</div>
+        【解説】文章全体を通してサリンジャーの生い立ち、軍歴、『ライ麦畑でつかまえて』の出版と反響、隠遁生活まで、彼の生涯と文学的影響を解説しています。
+      </div>
+    </div>
+
+    <!-- Question 10 (正解: C) -->
+    <div class="question-card" id="q-r10">
+      <div class="question-text">10. It can be inferred from the passage that Salinger's wartime experiences</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'A')">A. encouraged him to give up writing short stories</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'B')">B. convinced him to move permanently to Europe</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'C')">C. influenced his creation of sensitive characters in his writing</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'D')">D. helped him become a successful military commander</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. influenced his creation of sensitive characters in his writing</div>
+        【解説】第1段落末尾「These traumatic events deeply affected his world view, shaping his focus on vulnerable young characters...（トラウマとなる出来事が世界観に影響を与え、繊細な若いキャラクターを描く要因となった）」からCが推論されます。
+      </div>
+    </div>
+
+    <!-- Question 11 (正解: A) -->
+    <div class="question-card" id="q-r11">
+      <div class="question-text">11. According to paragraph 2, Holden Caulfield is a main character who</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'A')">A. wanders New York City after being dismissed from his school</button>
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'B')">B. works as an editor for a famous magazine in New Hampshire</button>
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'C')">C. serves as a soldier during World War II</button>
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'D')">D. organizes public protests against school libraries</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. wanders New York City after being dismissed from his school</div>
+        【解説】第2段落「...wandering New York City after being expelled from his prep school（退学させられた後NYをさまよう）」の記述からAが正解です。
+      </div>
+    </div>
+
+    <!-- Question 12 (正解: C) -->
+    <div class="question-card" id="q-r12">
+      <div class="question-text">12. Which of the following statements about <em>The Catcher in the Rye</em> is NOT true according to the passage?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'A')">A. It resonated strongly with young readers.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'B')">B. Some libraries banned it because of its language.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'C')">C. It was rejected by all major literary critics upon publication.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'D')">D. It sold millions of copies around the world.</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. It was rejected by all major literary critics upon publication.</div>
+        【解説】第2段落「won stunning praise from major critics（著名批評家から目覚ましい賛辞を得た）」と書かれており、否定的な記述であるCは不適切（＝NOT true）です。
+      </div>
+    </div>
+
+    <!-- Question 13 (正解: D) -->
+    <div class="question-card" id="q-r13">
+      <div class="question-text">13. In paragraph 2, the word <span class="underline-text">stunning</span> is closest in meaning to</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'A')">A. predictable</button>
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'B')">B. negative</button>
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'C')">C. brief</button>
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'D')">D. astonishing</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: D. astonishing</div>
+        【解説】`stunning`（素晴らしく魅力的な、実に驚くべき）に最も近い意味を持つ形容詞は <strong>astonishing</strong> です。
+      </div>
+    </div>
+
+    <!-- Question 14 (正解: B) -->
+    <div class="question-card" id="q-r14">
+      <div class="question-text">14. Why did some school boards ban <em>The Catcher in the Rye</em>?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'A')">A. Because it was too difficult for high school students to read.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'B')">B. Because of its informal language and rebellious tone.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'C')">C. Because Salinger refused to pay taxes on his book sales.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'D')">D. Because the story encouraged students to join the military.</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. Because of its informal language and rebellious tone.</div>
+        【解説】第2段落「banned the novel due to its informal language and rebellious tone」よりBが正解です。
+      </div>
+    </div>
+
+    <!-- Question 15 (正解: A) -->
+    <div class="question-card" id="q-r15">
+      <div class="question-text">15. According to the passage, how did Salinger react to his sudden international fame?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'A')">A. He retreated to a quiet place and avoided public life.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'B')">B. He gave frequent interviews to promote his new books.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'C')">C. He established a literary institute for young authors.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'D')">D. He moved back to Europe to serve in the U.S. Army again.</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. He retreated to a quiet place and avoided public life.</div>
+        【解説】第3段落「He retreated from public life to a secluded home in New Hampshire...」よりAが正解です。
+      </div>
+    </div>
+
+    <!-- Question 16 (正解: B) -->
+    <div class="question-card" id="q-r16">
+      <div class="question-text">16. According to the passage, J. D. Salinger</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'A')">A. was born in New Hampshire</button>
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'B')">B. served in the U.S. military during World War II</button>
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'C')">C. published dozens of novels after the 1970s</button>
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'D')">D. worked as a high school English teacher</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. served in the U.S. military during World War II</div>
+        【解説】第1段落「During World War II, Salinger served in the U.S. Army」よりBが正解です。
+      </div>
+    </div>
+
+    <!-- Question 17 (正解: A) -->
+    <div class="question-card" id="q-r17">
+      <div class="question-text">17. What is the most likely topic of the paragraph following this passage?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'A')">A. The enduring influence of <em>The Catcher in the Rye</em> on modern teenage fiction.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'B')">B. Salinger’s early college courses in New York City.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'C')">C. A detailed analysis of military weapons used during World War II.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'D')">D. The reasons why Salinger decided to leave his college.</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. The enduring influence of <em>The Catcher in the Rye</em> on modern teenage fiction.</div>
+        【解説】最終段落末尾が「今日でも高校の推薦図書として青少年の成長と格闘を象徴し続けている」と締めくくられているため、続く展開としては「現代のヤングアダルト文学への持続的な影響」が最も適切です。
+      </div>
+    </div>
+
+    <!-- Question 18 (正解: C) -->
+    <div class="question-card" id="q-r18">
+      <div class="question-text">18. In paragraph 3, the word <span class="underline-text">he</span> refers to which of the following?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'A')">A. Holden Caulfield</button>
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'B')">B. A major critic</button>
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'C')">C. J. D. Salinger</button>
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'D')">D. A high school teacher</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. J. D. Salinger</div>
+        【解説】第3段落「Although he avoided journalists and refused public appearances...」の `he` は、名声から退きメディア露出を拒んだ著者である <strong>J. D. Salinger</strong> を指しています。
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+
+    tablinks = document.getElementsByClassName("tab-btn");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+
+    document.getElementById(tabName).style.display = "block";
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  function checkAnswer(questionId, selectedLetter) {
+    const card = document.getElementById(questionId);
+    const buttons = card.querySelectorAll('.option-btn');
+    const explanation = card.querySelector('.explanation');
+    
+    const correctMatch = explanation.innerHTML.match(/正解:\s*([A-D])/);
+    if (!correctMatch) return;
+    const correctLetter = correctMatch[1];
+
+    buttons.forEach(btn => {
+      btn.disabled = true;
+      const btnText = btn.innerText.trim();
+      
+      if (btnText.startsWith(correctLetter)) {
+        btn.classList.add('correct');
+      }
+      if (btnText.startsWith(selectedLetter) && selectedLetter !== correctLetter) {
+        btn.classList.add('incorrect');
+      }
+    });
+
+    explanation.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
