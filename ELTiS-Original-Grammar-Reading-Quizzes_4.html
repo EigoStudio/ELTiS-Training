@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELTiS Practice Test - Grammar & Reading (White Sands Discovery)</title>
+<style>
+  :root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #27ae60;
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #cccccc;
+  }
+
+  body {
+    font-family: 'Segoe UI', Georgia, 'Times New Roman', Times, serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 850px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    color: var(--primary-color);
+    margin: 0;
+  }
+
+  .print-btn {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .print-btn:hover {
+    background-color: #2980b9;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 10px;
+    background: #e9ecef;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #495057;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tab-btn.active {
+    background: var(--secondary-color);
+    color: white;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+  }
+
+  .instructions {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    background-color: #f1f3f5;
+  }
+
+  .reading-passage {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    text-align: justify;
+  }
+
+  .reading-passage p {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-indent: 1.5em;
+  }
+
+  .line-num {
+    font-size: 0.8rem;
+    color: #777;
+    font-weight: normal;
+    display: inline-block;
+    width: 25px;
+    text-indent: 0;
+  }
+
+  .highlight-word {
+    font-weight: bold;
+    background-color: #e2e8f0;
+    padding: 2px 4px;
+    border-bottom: 2px solid var(--primary-color);
+  }
+
+  .underline-text {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+
+  .question-card {
+    margin-bottom: 25px;
+    page-break-inside: avoid;
+  }
+
+  .question-text {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-left: 15px;
+  }
+
+  .option-btn {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-family: 'Times New Roman', Times, serif;
+    transition: all 0.2s ease;
+  }
+
+  .option-btn:hover {
+    background-color: #eef6fc;
+    border-color: var(--secondary-color);
+  }
+
+  .option-btn.correct {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+    color: #155724;
+    font-weight: bold;
+  }
+
+  .option-btn.incorrect {
+    background-color: #f8d7da !important;
+    border-color: #dc3545 !important;
+    color: #721c24;
+  }
+
+  .explanation {
+    display: none;
+    margin-top: 10px;
+    padding: 12px 15px;
+    background-color: #e8f4f8;
+    border-left: 4px solid var(--secondary-color);
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+
+  .explanation-title {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 4px;
+  }
+
+  @media print {
+    body {
+      background-color: white;
+      padding: 0;
+      font-size: 11pt;
+    }
+
+    .container {
+      max-width: 100%;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .header-container h1 {
+      font-size: 1.2rem;
+    }
+
+    .print-btn, .tabs, .explanation {
+      display: none !important;
+    }
+
+    .tab-content {
+      display: block !important;
+      page-break-after: always;
+    }
+
+    .tab-content:last-child {
+      page-break-after: auto;
+    }
+
+    .instructions {
+      background-color: transparent;
+      border: 1px solid #000;
+    }
+
+    .reading-passage {
+      border: 1px solid #000;
+      padding: 15px;
+    }
+
+    .option-btn {
+      border: none;
+      padding: 2px 0;
+      background: transparent !important;
+      color: black !important;
+    }
+
+    .question-card {
+      margin-bottom: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-container">
+    <h1>ELTiS Practice Test</h1>
+    <button class="print-btn" onclick="window.print()">印刷する (PDF出力)</button>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="openTab(event, 'grammar-section')">Grammar (8問)</button>
+    <button class="tab-btn" onclick="openTab(event, 'reading-section')">Reading and Comprehension (10問)</button>
+  </div>
+
+  <!-- GRAMMAR (8 ORIGINAL QUESTIONS: Q1 - Q8) -->
+  <div id="grammar-section" class="tab-content active">
+    <div class="section-title">Grammar</div>
+    <div class="instructions">
+      <strong>Directions:</strong> In this part of the test, you will read some sentences and choose the best answer to complete each sentence.
+    </div>
+
+    <!-- Question 1 -->
+    <div class="question-card" id="q-g1">
+      <div class="question-text">1. The scientists working at the ancient archaeological site ________ excited about the new findings.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'A')">A. is</button>
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'B')">B. are</button>
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'C')">C. was</button>
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'D')">D. has been</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. are</div>
+        【解説】主語は複数名詞の `The scientists`（修飾語句：working at the...）のため、複数主語の現在形に対応する be動詞 <strong>are</strong> が入ります。
+      </div>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="question-card" id="q-g2">
+      <div class="question-text">2. ________ you know that ancient footprints were preserved in dry lakebeds?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'A')">A. Were</button>
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'B')">B. Does</button>
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'C')">C. Do</button>
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'D')">D. Have</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. Do</div>
+        【解説】一般動詞 `know` の二人称（you）に対する現在形の疑問文を作るため、<strong>Do</strong> が正解です。
+      </div>
+    </div>
+
+    <!-- Question 3 -->
+    <div class="question-card" id="q-g3">
+      <div class="question-text">3. The discovery of fossilized tracks often makes researchers ________ about early human behavior.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'A')">A. wonder</button>
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'B')">B. wondered</button>
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'C')">C. to wonder</button>
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'D')">D. wondering</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. wonder</div>
+        【解説】使役動詞 `make + 目的語 + 原形不定詞` のパターンです。「〜に…させる」の意味となり、動詞の原形 <strong>wonder</strong> が正解です。
+      </div>
+    </div>
+
+    <!-- Question 4 -->
+    <div class="question-card" id="q-g4">
+      <div class="question-text">4. ________ these ancient seeds analyzed by geologists last year?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'A')">A. Were</button>
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'B')">B. Was</button>
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'C')">C. Did</button>
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'D')">D. Are</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. Were</div>
+        【解説】過去の受動態（were + 過去分詞）の疑問文です。複数主語 `these ancient seeds` に対応する <strong>Were</strong> が正解です。
+      </div>
+    </div>
+
+    <!-- Question 5 -->
+    <div class="question-card" id="q-g5">
+      <div class="question-text">5. The research team managed ________ the exact age of the layer using radiocarbon dating.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'A')">A. determine</button>
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'B')">B. determined</button>
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'C')">C. determining</button>
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'D')">D. to determine</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: D. to determine</div>
+        【解説】動詞 `manage` は目的語に to不定詞 をとるため（manage to do：なんとか〜する）、<strong>to determine</strong> が正解です。
+      </div>
+    </div>
+
+    <!-- Question 6 -->
+    <div class="question-card" id="q-g6">
+      <div class="question-text">6. White Sands is the national park ________ contains well-preserved fossilized human footprints.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'A')">A. where</button>
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'B')">B. in which</button>
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'C')">C. which</button>
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'D')">D. where is</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. which</div>
+        【解説】空欄の後ろに動詞 `contains` が続いているため、主格の関係代名詞 <strong>which</strong> が正解です。（先行詞が場所であっても節内に主語がない場合は関係代名詞となります）
+      </div>
+    </div>
+
+    <!-- Question 7 -->
+    <div class="question-card" id="q-g7">
+      <div class="question-text">7. New Mexico is the state ________ researchers discovered evidence of early human presence.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'A')">A. where</button>
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'B')">B. which is</button>
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'C')">C. which</button>
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'D')">D. where is</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. where</div>
+        【解説】空欄の後ろに「主語＋動詞＋目的語（researchers discovered evidence...）」の完全な文が続いているため、場所を表す関係副詞 <strong>where</strong> が入ります。
+      </div>
+    </div>
+
+    <!-- Question 8 -->
+    <div class="question-card" id="q-g8">
+      <div class="question-text">8. If the seeds had not been preserved in the mud, archaeologists ________ the footprints so accurately.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'A')">A. could not have dated</button>
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'B')">B. could not date</button>
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'C')">C. did not date</button>
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'D')">D. do not date</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. could not have dated</div>
+        【解説】If節が `had not been preserved`（仮定法過去完了）となっているため、帰結節には `助動詞の過去形 + have + 過去分詞` の <strong>could not have dated</strong> が入ります。
+      </div>
+    </div>
+  </div>
+
+  <!-- READING AND COMPREHENSION (10 ORIGINAL QUESTIONS: Q9 - Q18) -->
+  <div id="reading-section" class="tab-content">
+    <div class="section-title">Reading and Comprehension</div>
+    <div class="instructions">
+      <strong>Directions:</strong> In this part of the test, you will read and answer questions about some passages.
+    </div>
+
+    <!-- Passage: White Sands Discovery -->
+    <div class="reading-passage">
+      <p>
+        <span class="line-num">1</span>For many decades, archaeologists generally agreed that the first human beings arrived in the Americas about 13,000 to 16,000 years ago, traveling across a land bridge connecting Asia and Alaska. However, a major archaeological discovery in New Mexico has challenged this long-held scientific consensus. At White Sands National Park, researchers uncovered dozens of fossilized human footprints embedded in the muddy layers of an ancient, dried-up lakebed.
+      </p>
+      <p>
+        <span class="line-num">8</span>To determine when these footprints were made, scientists carefully analyzed tiny aquatic seeds trapped directly above and below the tracks in the sediment layers. Using advanced radiocarbon dating techniques, they determined that the footprints were made between 23,000 and 21,000 years ago. This means that humans were living in North America during the peak of the Last Glacial Maximum, thousands of years earlier than previously believed. The tracks reveal that teenagers and children frequently walked across the ancient lakebed, leaving behind clear physical records of their daily movements.
+      </p>
+      <p>
+        <span class="line-num">17</span>This groundbreaking finding has forced experts to rethink their models regarding how and when early humans populated the Americas. The discovery proved that humans were already present long before melting ice sheets opened inland routes. Although <span class="highlight-word">they</span> initially faced skepticism from some members of the scientific community, further studies confirmed the astonishing age of the sediment layers. Today, the White Sands site is recognized as one of the most <span class="highlight-word">pivotal</span> archaeological locations in the Americas, opening an exciting new chapter in the study of early human history.
+      </p>
+    </div>
+
+    <!-- Question 9 -->
+    <div class="question-card" id="q-r9">
+      <div class="question-text">9. What does this passage mainly discuss?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'A')">A. The geological formations of national parks in New Mexico</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'B')">B. A discovery that changed beliefs about human arrival in the Americas</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'C')">C. Methods used by scientists to preserve ancient plant seeds</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'D')">D. The migration routes of ancient animals during the ice age</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. A discovery that changed beliefs about human arrival in the Americas</div>
+        【解説】文章全体を通して、ホワイトサンズでの足跡発見がアメリカ大陸への人類到達の定説（1万3000〜1万6000年前）を覆し（約2万3000〜2万1000年前）、人類史の理解を大きく変えたことを解説しています。
+      </div>
+    </div>
+
+    <!-- Question 10 -->
+    <div class="question-card" id="q-r10">
+      <div class="question-text">10. In paragraph 1, the word <span class="underline-text">consensus</span> refers to</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'A')">A. general agreement among a group of people</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'B')">B. official law made by government leaders</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'C')">C. ancient tool used for hunting large animals</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'D')">D. rare plant found in dry desert environments</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. general agreement among a group of people</div>
+        【解説】直前の `archaeologists generally agreed` という記述に対応しており、`consensus` は「合意、一般的意見の一致」を意味します。
+      </div>
+    </div>
+
+    <!-- Question 11 -->
+    <div class="question-card" id="q-r11">
+      <div class="question-text">11. According to the passage, fossils formed from human tracks in White Sands were found in</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'A')">A. deep underwater caves in Alaska</button>
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'B')">B. high mountain ranges in Asia</button>
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'C')">C. mud layers of a dried-up lakebed</button>
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'D')">D. dense forest soil in Eastern North America</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. mud layers of a dried-up lakebed</div>
+        【解説】第1段落末尾「...embedded in the muddy layers of an ancient, dried-up lakebed（乾いた古代の湖底の泥の地層に埋もれた）」の記述からCが正解です。
+      </div>
+    </div>
+
+    <!-- Question 12 -->
+    <div class="question-card" id="q-r12">
+      <div class="question-text">12. Which of the following statements can best be inferred from paragraph 2?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'A')">A. Scientists measured the footprints by comparing them with modern shoes.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'B')">B. The seeds helped establish a timeframe because they were in the same soil layers.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'C')">C. Children in ancient times were not allowed to walk near the lakebed.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'D')">D. The climate in New Mexico has stayed completely unchanged for 20,000 years.</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. The seeds helped establish a timeframe because they were in the same soil layers.</div>
+        【解説】第2段落「...analyzed tiny aquatic seeds trapped directly above and below the tracks in the sediment layers... determined that the footprints were made between 23,000 and 21,000 years ago」から、同じ地層にあった種子が年代特定に役立ったことが推論されます。
+      </div>
+    </div>
+
+    <!-- Question 13 -->
+    <div class="question-card" id="q-r13">
+      <div class="question-text">13. In paragraph 3, the word <span class="underline-text">pivotal</span> is closest in meaning to</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'A')">A. dangerous</button>
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'B')">B. temporary</button>
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'C')">C. crucial</button>
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'D')">D. mystery</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. crucial</div>
+        【解説】`pivotal`（極めて重要な、中核となる）に最も近い意味を持つ形容詞は <strong>crucial</strong>（決定的な、極めて重要な）です。
+      </div>
+    </div>
+
+    <!-- Question 14 -->
+    <div class="question-card" id="q-r14">
+      <div class="question-text">14. Which of the following statements about the White Sands discovery is NOT true?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'A')">A. The tracks were dated to between 23,000 and 21,000 years ago.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'B')">B. The footprints indicated the presence of teenagers and children.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'C')">C. The findings were immediately accepted by all scientists without any skepticism.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'D')">D. It showed humans were in North America earlier than long believed.</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. The findings were immediately accepted by all scientists without any skepticism.</div>
+        【解説】第3段落「Although they initially faced skepticism from some members of the scientific community...（当初一部の科学者から懐疑的な目で見られたものの）」と書かれており、Cの「全員に直ちに受け入れられた」は不適切（＝NOT true）です。
+      </div>
+    </div>
+
+    <!-- Question 15 -->
+    <div class="question-card" id="q-r15">
+      <div class="question-text">15. How did scientists find out the estimated age of the human footprints?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'A')">A. By reading ancient written documents left behind by early humans.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'B')">B. By performing radiocarbon dating on organic seeds found in the sediment.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'C')">C. By counting the layers of ice near the Alaskan land bridge.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'D')">D. By comparing the footprint sizes with ancient stone tools.</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. By performing radiocarbon dating on organic seeds found in the sediment.</div>
+        【解説】第2段落「...analyzed tiny aquatic seeds... Using advanced radiocarbon dating techniques...」よりBが正解です。
+      </div>
+    </div>
+
+    <!-- Question 16 -->
+    <div class="question-card" id="q-r16">
+      <div class="question-text">16. According to the passage, prior to this discovery, human arrival in the Americas was believed to be</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'A')">A. around 13,000 to 16,000 years ago</button>
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'B')">B. exactly 23,000 years ago</button>
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'C')">C. less than 5,000 years ago</button>
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'D')">D. more than 50,000 years ago</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. around 13,000 to 16,000 years ago</div>
+        【解説】第1段落「...first human beings arrived in the Americas about 13,000 to 16,000 years ago...」よりAが正解です。
+      </div>
+    </div>
+
+    <!-- Question 17 -->
+    <div class="question-card" id="q-r17">
+      <div class="question-text">17. What is the most likely topic of the paragraph following this passage?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'A')">A. Further research and new excavations being conducted at White Sands.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'B')">B. A history of how national parks are managed in North America.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'C')">C. The detailed chemical composition of aquatic seed species.</button>
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'D')">D. A biographical study of nineteenth-century European geologists.</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. Further research and new excavations being conducted at White Sands.</div>
+        【解説】最終段落末尾が「ホワイトサンズは人類史研究の刺激的な新しい章を開いている」と締めくくられているため、続く展開としては「さらなる調査やホワイトサンズでの新しい発掘作業」に関するトピック（A）が最も自然です。
+      </div>
+    </div>
+
+    <!-- Question 18 -->
+    <div class="question-card" id="q-r18">
+      <div class="question-text">18. In paragraph 3, the word <span class="underline-text">they</span> refers to which of the following?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'A')">A. Melting ice sheets</button>
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'B')">B. Early human footprints</button>
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'C')">C. The research findings / researchers</button>
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'D')">D. Inland routes</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. The research findings / researchers</div>
+        【解説】第3段落「Although they initially faced skepticism...（当初懐疑論に直面したものの）」の `they` は、研究結果（または研究チーム）を指しています。
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+
+    tablinks = document.getElementsByClassName("tab-btn");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+
+    document.getElementById(tabName).style.display = "block";
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  function checkAnswer(questionId, selectedLetter) {
+    const card = document.getElementById(questionId);
+    const buttons = card.querySelectorAll('.option-btn');
+    const explanation = card.querySelector('.explanation');
+    
+    const correctMatch = explanation.innerHTML.match(/正解:\s*([A-D])/);
+    if (!correctMatch) return;
+    const correctLetter = correctMatch[1];
+
+    buttons.forEach(btn => {
+      btn.disabled = true;
+      const btnText = btn.innerText.trim();
+      
+      if (btnText.startsWith(correctLetter)) {
+        btn.classList.add('correct');
+      }
+      if (btnText.startsWith(selectedLetter) && selectedLetter !== correctLetter) {
+        btn.classList.add('incorrect');
+      }
+    });
+
+    explanation.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELTiS Practice Test - Grammar & Reading (Leonard Bernstein)</title>
+<style>
+  :root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #27ae60;
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #cccccc;
+  }
+
+  body {
+    font-family: 'Segoe UI', Georgia, 'Times New Roman', Times, serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 850px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 35px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    color: var(--primary-color);
+    margin: 0;
+  }
+
+  .print-btn {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .print-btn:hover {
+    background-color: #2980b9;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  .tab-btn {
+    flex: 1;
+    padding: 10px;
+    background: #e9ecef;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #495057;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tab-btn.active {
+    background: var(--secondary-color);
+    color: white;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+  }
+
+  .instructions {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    background-color: #f1f3f5;
+  }
+
+  .reading-passage {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    text-align: justify;
+  }
+
+  .reading-passage p {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-indent: 1.5em;
+  }
+
+  .line-num {
+    font-size: 0.8rem;
+    color: #777;
+    font-weight: normal;
+    display: inline-block;
+    width: 25px;
+    text-indent: 0;
+  }
+
+  .highlight-word {
+    font-weight: bold;
+    background-color: #e2e8f0;
+    padding: 2px 4px;
+    border-bottom: 2px solid var(--primary-color);
+  }
+
+  .underline-text {
+    text-decoration: underline;
+    font-weight: bold;
+  }
+
+  .question-card {
+    margin-bottom: 25px;
+    page-break-inside: avoid;
+  }
+
+  .question-text {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-left: 15px;
+  }
+
+  .option-btn {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 8px 12px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-family: 'Times New Roman', Times, serif;
+    transition: all 0.2s ease;
+  }
+
+  .option-btn:hover {
+    background-color: #eef6fc;
+    border-color: var(--secondary-color);
+  }
+
+  .option-btn.correct {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+    color: #155724;
+    font-weight: bold;
+  }
+
+  .option-btn.incorrect {
+    background-color: #f8d7da !important;
+    border-color: #dc3545 !important;
+    color: #721c24;
+  }
+
+  .explanation {
+    display: none;
+    margin-top: 10px;
+    padding: 12px 15px;
+    background-color: #e8f4f8;
+    border-left: 4px solid var(--secondary-color);
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+
+  .explanation-title {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 4px;
+  }
+
+  @media print {
+    body {
+      background-color: white;
+      padding: 0;
+      font-size: 11pt;
+    }
+
+    .container {
+      max-width: 100%;
+      box-shadow: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .header-container h1 {
+      font-size: 1.2rem;
+    }
+
+    .print-btn, .tabs, .explanation {
+      display: none !important;
+    }
+
+    .tab-content {
+      display: block !important;
+      page-break-after: always;
+    }
+
+    .tab-content:last-child {
+      page-break-after: auto;
+    }
+
+    .instructions {
+      background-color: transparent;
+      border: 1px solid #000;
+    }
+
+    .reading-passage {
+      border: 1px solid #000;
+      padding: 15px;
+    }
+
+    .option-btn {
+      border: none;
+      padding: 2px 0;
+      background: transparent !important;
+      color: black !important;
+    }
+
+    .question-card {
+      margin-bottom: 20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-container">
+    <h1>ELTiS Practice Test</h1>
+    <button class="print-btn" onclick="window.print()">印刷する (PDF出力)</button>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="openTab(event, 'grammar-section')">Grammar (8問)</button>
+    <button class="tab-btn" onclick="openTab(event, 'reading-section')">Reading and Comprehension (10問)</button>
+  </div>
+
+  <!-- GRAMMAR (8 QUESTIONS: Q1 - Q8) -->
+  <div id="grammar-section" class="tab-content active">
+    <div class="section-title">Grammar</div>
+    <div class="instructions">
+      <strong>Directions:</strong> In this part of the test, you will read some sentences and choose the best answer to complete each sentence.
+    </div>
+
+    <!-- Question 1 -->
+    <div class="question-card" id="q-g1">
+      <div class="question-text">1. Did the stunning performance make the audience ________?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'A')">A. to excite</button>
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'B')">B. to be excited</button>
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'C')">C. excited</button>
+        <button class="option-btn" onclick="checkAnswer('q-g1', 'D')">D. go excite</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. excited</div>
+        【解説】`make + 目的語(the audience) + 形容詞(excited)` の構文です。観客が「興奮させられた状態」を表すため過去分詞形容詞の <strong>excited</strong> が入ります。
+      </div>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="question-card" id="q-g2">
+      <div class="question-text">2. ________ you heard this musical soundtrack before?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'A')">A. Did</button>
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'B')">B. Do</button>
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'C')">C. Have</button>
+        <button class="option-btn" onclick="checkAnswer('q-g2', 'D')">D. Has</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. Have</div>
+        【解説】現在完了形（経験）の疑問文です。主語 `you` と過去分詞 `heard` に対応する <strong>Have</strong> が正解です。
+      </div>
+    </div>
+
+    <!-- Question 3 -->
+    <div class="question-card" id="q-g3">
+      <div class="question-text">3. Many critics believe this musical is ________ of the three.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'A')">A. beautiful</button>
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'B')">B. more beautiful</button>
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'C')">C. the most beautiful</button>
+        <button class="option-btn" onclick="checkAnswer('q-g3', 'D')">D. as beautiful</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. the most beautiful</div>
+        【解説】3つ以上の比較（of the three）で「最も美しい」を表すため、最上級の <strong>the most beautiful</strong> が入ります。
+      </div>
+    </div>
+
+    <!-- Question 4 -->
+    <div class="question-card" id="q-g4">
+      <div class="question-text">4. My brother is planning ________ music composition at the university.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'A')">A. to study</button>
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'B')">B. studying</button>
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'C')">C. study</button>
+        <button class="option-btn" onclick="checkAnswer('q-g4', 'D')">D. studied</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. to study</div>
+        【解説】動詞 `plan` は目的語に to不定詞 をとるため、<strong>to study</strong> が正解です。
+      </div>
+    </div>
+
+    <!-- Question 5 -->
+    <div class="question-card" id="q-g5">
+      <div class="question-text">5. The 1950s was a time ________ musical theater experienced rapid growth in New York.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'A')">A. when</button>
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'B')">B. whose</button>
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'C')">C. which</button>
+        <button class="option-btn" onclick="checkAnswer('q-g5', 'D')">D. that is</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. when</div>
+        【解説】先行詞が時を表す名詞 `a time` であり、後ろに完全な文が続いているため、関係副詞の <strong>when</strong> が正解です。
+      </div>
+    </div>
+
+    <!-- Question 6 -->
+    <div class="question-card" id="q-g6">
+      <div class="question-text">6. The audience saw the famous conductor ________ his hands in the air.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'A')">A. waving</button>
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'B')">B. waved</button>
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'C')">C. have waved</button>
+        <button class="option-btn" onclick="checkAnswer('q-g6', 'D')">D. be waving</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. waving</div>
+        【解説】知覚動詞 `see + 目的語 + 現在分詞`（Oが〜しているのを見る）の構文です。動作が進行中であることを表す <strong>waving</strong> が入ります。
+      </div>
+    </div>
+
+    <!-- Question 7 -->
+    <div class="question-card" id="q-g7">
+      <div class="question-text">7. ________ that his musical score was accepted, the composer decided to celebrate.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'A')">A. Know</button>
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'B')">B. Knowing</button>
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'C')">C. Knew</button>
+        <button class="option-btn" onclick="checkAnswer('q-g7', 'D')">D. Having knowing</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. Knowing</div>
+        【解説】「〜と知っていたので」という理由を表す分詞構文です。文頭に現在分詞の <strong>Knowing</strong> が入ります。
+      </div>
+    </div>
+
+    <!-- Question 8 -->
+    <div class="question-card" id="q-g8">
+      <div class="question-text">8. If I had a ticket for the Broadway show tonight, I ________ to the theater right now.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'A')">A. go</button>
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'B')">B. went</button>
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'C')">C. would go</button>
+        <button class="option-btn" onclick="checkAnswer('q-g8', 'D')">D. will go</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. would go</div>
+        【解説】If節が `had`（仮定法過去）のため、帰結節には `助動詞の過去形(would) + 動詞の原形` である <strong>would go</strong> が正解です。
+      </div>
+    </div>
+  </div>
+
+  <!-- READING AND COMPREHENSION (10 QUESTIONS: Q9 - Q18) -->
+  <div id="reading-section" class="tab-content">
+    <div class="section-title">Reading and Comprehension</div>
+    <div class="instructions">
+      <strong>Directions:</strong> In this part of the test, you will read and answer questions about some passages.
+    </div>
+
+    <!-- Passage: Leonard Bernstein and Musical Masterpieces -->
+    <div class="reading-passage">
+      <p>
+        <span class="line-num">1</span>Many American composers have created works that reflect the energy of theater and film. Leonard Bernstein (1918–1990), one of the most charismatic musicians of the twentieth century, wrote memorable music that brought stories to life on both stage and screen. His most famous musical, <em>West Side Story</em>, adapted Shakespeare's <em>Romeo and Juliet</em> to the streets of New York City. Through rhythmic jazz beats and delicate melodies, Bernstein captured the passion, conflict, and heartbreak of urban youth. Listeners can feel the tension in dramatic dance numbers as well as the gentle tenderness in romantic songs like "Tonight."
+      </p>
+      <p>
+        <span class="line-num">10</span>The theatrical success of legendary composers was matched by other legendary musicians who <span class="highlight-word">transformed</span> American entertainment. Just as Bernstein brought classical sophistication to Broadway, George Gershwin blended classical structure with jazz in <em>Rhapsody in Blue</em> and the opera <em>Porgy and Bess</em>. Later in the century, film composer John Williams drew inspiration from these rich traditions to create grand orchestral scores for movies such as <em>Star Wars</em> and <em>Jaws</em>. <span class="highlight-word">This</span> powerful combination of symphonic music and dramatic storytelling became a defining feature of modern American culture.
+      </p>
+      <p>
+        <span class="line-num">18</span>However, Bernstein and other composers who wrote music for the stage and screen did not just aim to entertain. <span class="highlight-word">They</span> used their melodies to tell audiences deeper human truths. Music brought emotional depth to serious social issues, urban life, and human relationships. By mixing different musical styles—from classical symphonies to popular jazz—Bernstein proved that theater music could achieve the highest level of artistic excellence while remaining accessible to the public.
+      </p>
+    </div>
+
+    <!-- Question 9 (高難易度化) -->
+    <div class="question-card" id="q-r9">
+      <div class="question-text">9. With what topic is the first paragraph mainly concerned?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'A')">A. The historical origins of Shakespeare’s <em>Romeo and Juliet</em> in American theater</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'B')">B. How Bernstein expressed complex urban emotions and conflicts through his musical score</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'C')">C. The differences between classical ballet music and modern jazz dance rhythms</button>
+        <button class="option-btn" onclick="checkAnswer('q-r9', 'D')">D. Why Broadway musicals preferred romantic songs over dramatic orchestral compositions</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. How Bernstein expressed complex urban emotions and conflicts through his musical score</div>
+        【解説】第1段落はバーンスタインが『ウエスト・サイド物語』において、ジャズのリズムやメロディを用いて都会の若者の複雑な感情（情熱、葛藤、失恋、緊張感と優しさ）をいかに表現したかが主眼となっています。A, C, Dは本文の単語を使っていますが焦点がずれています。
+      </div>
+    </div>
+
+    <!-- Question 10 (高難易度化：語彙 transformed) -->
+    <div class="question-card" id="q-r10">
+      <div class="question-text">10. The word <span class="underline-text">transformed</span> in paragraph 2 is closest in meaning to</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'A')">A. altered</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'B')">B. preserved</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'C')">C. imitated</button>
+        <button class="option-btn" onclick="checkAnswer('q-r10', 'D')">D. expanded</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. altered</div>
+        【解説】`transformed`（姿・性質を変えた、変革した）の文脈上の同義語として最も適切なのは <strong>altered</strong>（〜を変容させた）です。B（保存した）、C（模倣した）、D（拡大した）は不適切です。
+      </div>
+    </div>
+
+    <!-- Question 11 (高難易度化) -->
+    <div class="question-card" id="q-r11">
+      <div class="question-text">11. According to paragraph 1, listener experience in <em>West Side Story</em> is characterized by contrasting feelings of</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'A')">A. classical elegance and traditional opera melodies</button>
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'B')">B. dramatic intensity and quiet, emotional warmth</button>
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'C')">C. peaceful nature sounds and urban noise</button>
+        <button class="option-btn" onclick="checkAnswer('q-r11', 'D')">D. lighthearted humor and historical sadness</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. dramatic intensity and quiet, emotional warmth</div>
+        【解説】第1段落末尾の「feel the tension in dramatic dance numbers as well as the gentle tenderness in romantic songs...」を言い換えた選択肢です。「緊張感（dramatic intensity）」と「優しさ（emotional warmth）」の対比を正しく捉えているBが正解です。
+      </div>
+    </div>
+
+    <!-- Question 12 (高難易度化) -->
+    <div class="question-card" id="q-r12">
+      <div class="question-text">12. With what topic is the second paragraph mainly concerned?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'A')">A. The commercial success of Hollywood film soundtracks in the twentieth century</button>
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'B')">B. The tradition of combining classical music elements with popular theater and film</button>
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'C')">C. Why George Gershwin rejected classical structures in favor of modern jazz</button>
+        <button class="option-btn" onclick="checkAnswer('q-r12', 'D')">D. The rivalry between Broadway theater composers and Hollywood film composers</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. The tradition of combining classical music elements with popular theater and film</div>
+        【解説】第2段落はバーンスタインだけでなく、ガーシュウィンやジョン・ウィリアムズらが「クラシック的な要素とポピュラーな舞台・映画を融合させた伝統」について述べています。C（拒絶した）やD（対立・ライバル関係）は本文の事実と反します。
+      </div>
+    </div>
+
+    <!-- Question 13 (指示語 This) -->
+    <div class="question-card" id="q-r13">
+      <div class="question-text">13. The word <span class="underline-text">This</span> in paragraph 2 refers to</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'A')">A. the blending of orchestral music with dramatic storytelling in theater and film</button>
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'B')">B. the widespread popularity of <em>Star Wars</em> and <em>Jaws</em> across America</button>
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'C')">C. George Gershwin's decision to write opera instead of Broadway musicals</button>
+        <button class="option-btn" onclick="checkAnswer('q-r13', 'D')">D. the transition from twentieth-century jazz to classical symphonies</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. the blending of orchestral music with dramatic storytelling in theater and film</div>
+        【解説】`This powerful combination...` 直前の文章（ガーシュウィンやウィリアムズらが行った「交響楽と劇的ストーリーテリングの融合」）を指すAが最も包括的で適切です。
+      </div>
+    </div>
+
+    <!-- Question 14 (高難易度化：EXCEPT問題) -->
+    <div class="question-card" id="q-r14">
+      <div class="question-text">14. According to paragraph 1, Bernstein's score for <em>West Side Story</em> incorporates all of the following EXCEPT</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'A')">A. energetic jazz-based rhythms</button>
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'B')">B. tender romantic melodies</button>
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'C')">C. rigid classical opera forms</button>
+        <button class="option-btn" onclick="checkAnswer('q-r14', 'D')">D. tense dance sequences</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. rigid classical opera forms</div>
+        【解説】ジャズのリズム（A）、ロマンチックなメロディ（B）、緊迫したダンス（D）はすべて第1段落で描かれていますが、「厳格なクラシック・オペラ形式（rigid classical opera forms）」は組み込まれていないため、Cが正解です。
+      </div>
+    </div>
+
+    <!-- Question 15 (高難易度化) -->
+    <div class="question-card" id="q-r15">
+      <div class="question-text">15. With what topic is the third paragraph mainly concerned?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'A')">A. The artistic depth and social purpose behind theatrical music compositions</button>
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'B')">B. The practical difficulties of making classical symphonies popular among teenagers</button>
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'C')">C. How modern composers convinced audiences to care about social issues</button>
+        <button class="option-btn" onclick="checkAnswer('q-r15', 'D')">D. The reasons why public theaters preferred jazz over classical symphonies</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: A. The artistic depth and social purpose behind theatrical music compositions</div>
+        【解説】第3段落は、バーンスタインらの楽曲が単なるエンターテインメントにとどまらず、社会問題や人間の真実を表現する「芸術的深みと社会的意図」を持っていたことを解説しています。
+      </div>
+    </div>
+
+    <!-- Question 16 (指示語 They) -->
+    <div class="question-card" id="q-r16">
+      <div class="question-text">16. The word <span class="underline-text">They</span> in paragraph 3 refers to</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'A')">A. classical symphonies and popular jazz</button>
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'B')">B. serious social issues in urban areas</button>
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'C')">C. Bernstein and other stage and screen composers</button>
+        <button class="option-btn" onclick="checkAnswer('q-r16', 'D')">D. members of the theater audience</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. Bernstein and other stage and screen composers</div>
+        【解説】直前の文「Bernstein and other composers who wrote music for the stage and screen...」を受ける代名詞です。
+      </div>
+    </div>
+
+    <!-- Question 17 (高難易度化：EXCEPT問題) -->
+    <div class="question-card" id="q-r17">
+      <div class="question-text">17. All of the following are described as achievements of theatrical music in paragraph 3 EXCEPT</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'A')">A. bringing emotional depth to serious social themes</button>
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'B')">B. proving that theater music can reach high artistic standards</button>
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'C')">C. replacing traditional classical concerts in modern American cities</button>
+        <button class="option-btn" onclick="checkAnswer('q-r17', 'D')">D. combining different musical styles to remain accessible to the public</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: C. replacing traditional classical concerts in modern American cities</div>
+        【解説】A（社会テーマへの感情的深み）、B（高い芸術的基準の証明）、D（親しみやすさとスタイルの融合）は段落内に明記されています。Cの「伝統的クラシック演奏会を取って代わった（置換した）」という記述はどこにも無いため、これが正解です。
+      </div>
+    </div>
+
+    <!-- Question 18 (高難易度化：全体主旨) -->
+    <div class="question-card" id="q-r18">
+      <div class="question-text">18. What is the main purpose of the passage?</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'A')">A. To compare the career achievements of Broadway composers with Hollywood film directors</button>
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'B')">B. To explain how American composers elevated theatrical music by combining artistic tradition and popular culture</button>
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'C')">C. To argue that jazz is superior to classical music in expressing urban human emotions</button>
+        <button class="option-btn" onclick="checkAnswer('q-r18', 'D')">D. To trace the history of Shakespearean adaptations in twentieth-century American opera</button>
+      </div>
+      <div class="explanation">
+        <div class="explanation-title">正解: B. To explain how American composers elevated theatrical music by combining artistic tradition and popular culture</div>
+        【解説】文章全体を通して、バーンスタインを中心にガーシュウィンやウィリアムズらが「芸術的伝統（クラシック等）」と「ポピュラー文化（ジャズ・映画・舞台）」を融合させ、劇場音楽の地位を高めたことを説明しています。
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+
+    tablinks = document.getElementsByClassName("tab-btn");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+
+    document.getElementById(tabName).style.display = "block";
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  function checkAnswer(questionId, selectedLetter) {
+    const card = document.getElementById(questionId);
+    const buttons = card.querySelectorAll('.option-btn');
+    const explanation = card.querySelector('.explanation');
+    
+    const correctMatch = explanation.innerHTML.match(/正解:\s*([A-D])/);
+    if (!correctMatch) return;
+    const correctLetter = correctMatch[1];
+
+    buttons.forEach(btn => {
+      btn.disabled = true;
+      const btnText = btn.innerText.trim();
+      
+      if (btnText.startsWith(correctLetter)) {
+        btn.classList.add('correct');
+      }
+      if (btnText.startsWith(selectedLetter) && selectedLetter !== correctLetter) {
+        btn.classList.add('incorrect');
+      }
+    });
+
+    explanation.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
