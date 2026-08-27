@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELTiS Vocabulary Practice No.1</title>
+<script src="auth.js"></script>
+<style>
+  :root {
+    --primary-color: #1a365d;
+    --secondary-color: #2b6cb0;
+    --accent-color: #319795;
+    --bg-color: #f7fafc;
+    --card-bg: #ffffff;
+    --text-color: #2d3748;
+    --border-color: #e2e8f0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 20px;
+  }
+
+  /* Control Panel for Zoom */
+  .control-panel {
+    max-width: 900px;
+    margin: 0 auto 15px auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background: #edf2f7;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+  }
+
+  .zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #4a5568;
+  }
+
+  .zoom-btn {
+    background: white;
+    border: 1px solid #cbd5e0;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .zoom-btn:hover {
+    background: #e2e8f0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transform-origin: top center;
+    transition: transform 0.2s ease;
+  }
+
+  h1 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    font-size: 1.8rem;
+    border-bottom: 3px solid var(--secondary-color);
+    padding-bottom: 10px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #4a5568;
+    font-size: 0.95rem;
+    margin-bottom: 25px;
+  }
+
+  /* Tab Styling */
+  .tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    border-bottom: 2px solid var(--border-color);
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 12px 8px;
+    background: #edf2f7;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.95rem;
+    color: #4a5568;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.2s ease;
+    text-align: center;
+  }
+
+  .tab-btn:hover {
+    background: #e2e8f0;
+  }
+
+  .tab-btn.active {
+    background: var(--secondary-color);
+    color: white;
+  }
+
+  /* Content Styling */
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .question-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-left: 5px solid var(--secondary-color);
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 22px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  }
+
+  .question-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--primary-color);
+    margin-bottom: 12px;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .option-btn {
+    background: #f8fafc;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    padding: 10px 14px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    transition: all 0.2s ease;
+  }
+
+  .option-btn:hover {
+    background: #ebf8ff;
+    border-color: var(--secondary-color);
+  }
+
+  .option-btn.correct {
+    background-color: #c6f6d5 !important;
+    border-color: #38a169 !important;
+    color: #22543d;
+    font-weight: bold;
+  }
+
+  .option-btn.incorrect {
+    background-color: #fed7d7 !important;
+    border-color: #e53e3e !important;
+    color: #742a2a;
+  }
+
+  .explanation {
+    display: none;
+    margin-top: 15px;
+    padding: 14px;
+    background-color: #ebf8ff;
+    border-radius: 6px;
+    font-size: 0.92rem;
+    border-left: 4px solid var(--secondary-color);
+  }
+
+  .explanation span.label {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 0.98rem;
+  }
+
+  .vocab-list {
+    margin-top: 10px;
+    font-size: 0.88rem;
+    color: #2d3748;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 10px 14px;
+    border-radius: 4px;
+    line-height: 1.6;
+    border: 1px solid #e2e8f0;
+  }
+
+  /* 🖨 PRINT STYLES (Activated on Cmd/Ctrl+P) */
+  @media print {
+    body {
+      background-color: white !important;
+      padding: 0 !important;
+      color: black !important;
+    }
+
+    .control-panel, .tabs {
+      display: none !important;
+    }
+
+    .container {
+      box-shadow: none !important;
+      padding: 0 !important;
+      max-width: 100% !important;
+      transform: none !important;
+    }
+
+    h1 {
+      font-size: 1.4rem !important;
+      border-bottom: 2px solid black !important;
+      margin-bottom: 4px !important;
+    }
+
+    .subtitle {
+      margin-bottom: 12px !important;
+      font-size: 0.8rem !important;
+    }
+
+    /* Show ALL tab contents when printing */
+    .tab-content {
+      display: block !important;
+    }
+
+    .question-card {
+      border: none !important;
+      border-bottom: 1px solid #ddd !important;
+      padding: 6px 0 !important;
+      margin-bottom: 6px !important;
+      page-break-inside: avoid;
+    }
+
+    .question-title {
+      color: black !important;
+      font-size: 0.92rem !important;
+      margin-bottom: 4px !important;
+    }
+
+    /* Force Horizontal Single-Line Options for Print to Save Paper */
+    .options-grid {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 15px !important;
+      margin-top: 2px !important;
+    }
+
+    .option-btn {
+      background: none !important;
+      border: none !important;
+      padding: 0 !important;
+      font-size: 0.9rem !important;
+      color: black !important;
+      display: inline-block !important;
+    }
+
+    /* Hide Explanations for Test Sheet Output */
+    .explanation {
+      display: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Control Panel -->
+<div class="control-panel">
+  <div class="zoom-controls">
+    <span>表示サイズ:</span>
+    <button class="zoom-btn" onclick="changeZoom(-10)">-</button>
+    <span id="zoom-val">100%</span>
+    <button class="zoom-btn" onclick="changeZoom(10)">+</button>
+  </div>
+</div>
+
+<div class="container" id="main-container">
+  <h1>ELTiS Vocabulary Practice No.1</h1>
+
+  <!-- Navigation Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="openTab(event, 'test1')">Test 1 (1-10)</button>
+    <button class="tab-btn" onclick="openTab(event, 'test2')">Test 2 (11-20)</button>
+    <button class="tab-btn" onclick="openTab(event, 'test3')">Test 3 (21-30)</button>
+    <button class="tab-btn" onclick="openTab(event, 'test4')">Test 4 (31-40)</button>
+    <button class="tab-btn" onclick="openTab(event, 'test5')">Test 5 (41-50)</button>
+  </div>
+
+  <!-- TEST 1 (Q1-Q10) -->
+  <div id="test1" class="tab-content active">
+    
+    <div class="question-card" id="q1-1">
+      <div class="question-title">1. The science teacher asked the class to ________ the results of their chemistry experiment in a detailed chart.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q1-1', 'A')">(A) erase</button>
+        <button class="option-btn" onclick="checkAnswer('q1-1', 'B')">(B) record</button>
+        <button class="option-btn" onclick="checkAnswer('q1-1', 'C')">(C) neglect</button>
+        <button class="option-btn" onclick="checkAnswer('q1-1', 'D')">(D) hesitate</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) record</span><br>
+        【文脈】理科の先生はクラスの生徒に対し、化学実験の結果を詳細な表に<strong>記録する</strong>よう求めた。
+        <div class="vocab-list">
+          ・(A) erase: 消去する<br>
+          ・(B) record: 記録する<br>
+          ・(C) neglect: 怠る、無視する<br>
+          ・(D) hesitate: ためらう
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q1-2">
+      <div class="question-title">2. Regular attendance and active participation are ________ requirements for passing this course.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q1-2', 'A')">(A) optional</button>
+        <button class="option-btn" onclick="checkAnswer('q1-2', 'B')">(B) temporary</button>
+        <button class="option-btn" onclick="checkAnswer('q1-2', 'C')">(C) essential</button>
+        <button class="option-btn" onclick="checkAnswer('q1-2', 'D')">(D) accidental</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) essential</span><br>
+        【文脈】定期的な出席と積極的な参加は、この講座に合格するための<strong>必要不可欠な（重要な）</strong>要件です。
+        <div class="vocab-list">
+          ・(A) optional: 任意の、選択自由の<br>
+          ・(B) temporary: 一時的な<br>
+          ・(C) essential: 必要不可欠な、重要な<br>
+          ・(D) accidental: 偶然の
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q1-3">
+      <div class="question-title">3. The school administration decided to ________ the mandatory uniform policy after receiving feedback from parents.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q1-3', 'A')">(A) destroy</button>
+        <button class="option-btn" onclick="checkAnswer('q1-3', 'B')">(B) forget</button>
+        <button class="option-btn" onclick="checkAnswer('q1-3', 'C')">(C) repeat</button>
+        <button class="option-btn" onclick="checkAnswer('q1-3', 'D')">(D) modify</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (D) modify</span><br>
+        【文脈】学校運営陣は保護者からのフィードバックを受けて、義務付けられている制服の規程を<strong>修正する（変更する）</strong>ことに決定した。
+        <div class="vocab-list">
+          ・(A) destroy: 破壊する<br>
+          ・(B) forget: 忘れる<br>
+          ・(C) repeat: 繰り返す<br>
+          ・(D) modify: 修正する、変更する
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q1-4">
+      <div class="question-title">4. Heavy rain caused a sudden ________ in the school's outdoor sports tournament schedule.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q1-4', 'A')">(A) disruption</button>
+        <button class="option-btn" onclick="checkAnswer('q1-4', 'B')">(B) agreement</button>
+        <button class="option-btn" onclick="checkAnswer('q1-4', 'C')">(C) conclusion</button>
+        <button class="option-btn" onclick="checkAnswer('q1-4', 'D')">(D) expansion</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (A) disruption</span><br>
+        【文脈】大雨により、学校の屋外スポーツ大会のスケジュールに突然の<strong>中断（混乱）</strong>が生じた。
+        <div class="vocab-list">
+          ・(A) disruption: 中断、混乱、障害<br>
+          ・(B) agreement: 合意、協定<br>
+          ・(C) conclusion: 結論、締めくくり<br>
+          ・(D) expansion: 拡大、拡張
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q1-5">
+      <div class="question-title">5. Students must ________ their homework electronically before midnight on Sunday.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q1-5', 'A')">(A) reject</button>
+        <button class="option-btn" onclick="checkAnswer('q1-5', 'B')">(B) submit</button>
+        <button class="option-btn" onclick="checkAnswer('q1-5', 'C')">(C) withhold</button>
+        <button class="option-btn" onclick="checkAnswer('q1-5', 'D')">(D) construct</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) submit</span><br>
+        【文脈】生徒は日曜日の夜12時までに宿題をオンラインで<strong>提出しなければならない</strong>。
+        <div class="vocab-list">
+          ・(A) reject: 拒絶する<br>
+          ・(B) submit: 提出する<br>
+          ・(C) withhold: 留保する、保留する<br>
+          ・(D) construct: 建設する
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q1-6">
+      <div class="question-title">6. The historian provided ________ evidence to support her new theory about the ancient civilization.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q1-6', 'A')">(A) fragile</button>
+        <button class="option-btn" onclick="checkAnswer('q1-6', 'B')">(B) shallow</button>
+        <button class="option-btn" onclick="checkAnswer('q1-6', 'C')">(C) substantial</button>
+        <button class="option-btn" onclick="checkAnswer('q1-6', 'D')">(D) artificial</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) substantial</span><br>
+        【文脈】歴史家は、古代文明に関する彼女の新しい説を裏付けるための<strong>かなりの（実質的な）</strong>証拠を示した。
+        <div class="vocab-list">
+          ・(A) fragile: 壊れやすい、脆い<br>
+          ・(B) shallow: 浅い<br>
+          ・(C) substantial: かなりの、実質的な、しっかりとした<br>
+          ・(D) artificial: 人工的な
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q1-7">
+      <div class="question-title">7. The principal made an official ________ regarding the dates for the upcoming final exams.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q1-7', 'A')">(A) announcement</button>
+        <button class="option-btn" onclick="checkAnswer('q1-7', 'B')">(B) hesitation</button>
+        <button class="option-btn" onclick="checkAnswer('q1-7', 'C')">(C) argument</button>
+        <button class="option-btn" onclick="checkAnswer('q1-7', 'D')">(D) obstacle</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (A) announcement</span><br>
+        【文脈】校長先生は、今度の期末試験の日程に関する公式な<strong>発表（お知らせ）</strong>を行った。
+        <div class="vocab-list">
+          ・(A) announcement: 発表、告知<br>
+          ・(B) hesitation: ためらい<br>
+          ・(C) argument: 議論、口論<br>
+          ・(D) obstacle: 障害物
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q1-8">
+      <div class="question-title">8. Plants use sunlight to ________ carbon dioxide and water into oxygen and glucose.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q1-8', 'A')">(A) divide</button>
+        <button class="option-btn" onclick="checkAnswer('q1-8', 'B')">(B) prevent</button>
+        <button class="option-btn" onclick="checkAnswer('q1-8', 'C')">(C) damage</button>
+        <button class="option-btn" onclick="checkAnswer('q1-8', 'D')">(D) convert</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (D) convert</span><br>
+        【文脈】植物は太陽光を利用して二酸化炭素と水を酸素とブドウ糖に<strong>変換する</strong>。
+        <div class="vocab-list">
+          ・(A) divide: 分割する<br>
+          ・(B) prevent: 防ぐ<br>
+          ・(C) damage: 損害を与える<br>
+          ・(D) convert: 変換する、変える
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q1-9">
+      <div class="question-title">9. The student was ________ for her academic progress and received a certificate of merit.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q1-9', 'A')">(A) criticized</button>
+        <button class="option-btn" onclick="checkAnswer('q1-9', 'B')">(B) commended</button>
+        <button class="option-btn" onclick="checkAnswer('q1-9', 'C')">(C) penalized</button>
+        <button class="option-btn" onclick="checkAnswer('q1-9', 'D')">(D) dismissed</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) commended</span><br>
+        【文脈】その生徒は学業の進展に対して<strong>褒められ（称賛され）</strong>、表彰状を受け取った。
+        <div class="vocab-list">
+          ・(A) criticized: 批判された<br>
+          ・(B) commended: 称賛された、褒められた<br>
+          ・(C) penalized: 処罰された<br>
+          ・(D) dismissed: 解雇された、退けられた
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q1-10">
+      <div class="question-title">10. Solar panels generate clean energy by capturing energy directly from an abundant ________.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q1-10', 'A')">(A) deficit</button>
+        <button class="option-btn" onclick="checkAnswer('q1-10', 'B')">(B) obstacle</button>
+        <button class="option-btn" onclick="checkAnswer('q1-10', 'C')">(C) resource</button>
+        <button class="option-btn" onclick="checkAnswer('q1-10', 'D')">(D) burden</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) resource</span><br>
+        【文脈】ソーラーパネルは、豊富な<strong>資源</strong>から直接エネルギーを取り込むことでクリーンなエネルギーを生成する。
+        <div class="vocab-list">
+          ・(A) deficit: 赤字、不足<br>
+          ・(B) obstacle: 障害物<br>
+          ・(C) resource: 資源<br>
+          ・(D) burden: 重荷、負担
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TEST 2 (Q11-Q20) -->
+  <div id="test2" class="tab-content">
+    
+    <div class="question-card" id="q2-1">
+      <div class="question-title">11. The textbook chapter provides a comprehensive ________ of the events that led to the American Revolution.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q2-1', 'A')">(A) illusion</button>
+        <button class="option-btn" onclick="checkAnswer('q2-1', 'B')">(B) overview</button>
+        <button class="option-btn" onclick="checkAnswer('q2-1', 'C')">(C) rumor</button>
+        <button class="option-btn" onclick="checkAnswer('q2-1', 'D')">(D) penalty</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) overview</span><br>
+        【文脈】教科書の章には、アメリカ独立戦争へとつながった出来事の総合的な<strong>概観（概要）</strong>が掲載されている。
+        <div class="vocab-list">
+          ・(A) illusion: 錯覚、幻想<br>
+          ・(B) overview: 概観、概要<br>
+          ・(C) rumor: 噂<br>
+          ・(D) penalty: 罰則、ペナルティ
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q2-2">
+      <div class="question-title">12. Students are encouraged to ________ different sources of information when writing a research paper.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q2-2', 'A')">(A) ignore</button>
+        <button class="option-btn" onclick="checkAnswer('q2-2', 'B')">(B) misplace</button>
+        <button class="option-btn" onclick="checkAnswer('q2-2', 'C')">(C) destroy</button>
+        <button class="option-btn" onclick="checkAnswer('q2-2', 'D')">(D) evaluate</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (D) evaluate</span><br>
+        【文脈】研究論文を書く際、生徒は多様な情報源を<strong>評価（吟味）する</strong>ことが推奨されている。
+        <div class="vocab-list">
+          ・(A) ignore: 無視する<br>
+          ・(B) misplace: 置き忘れる<br>
+          ・(C) destroy: 破壊する<br>
+          ・(D) evaluate: 評価する、査定する
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q2-3">
+      <div class="question-title">13. The graph shows a ________ increase in global temperatures over the last few decades.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q2-3', 'A')">(A) steady</button>
+        <button class="option-btn" onclick="checkAnswer('q2-3', 'B')">(B) reluctant</button>
+        <button class="option-btn" onclick="checkAnswer('q2-3', 'C')">(C) rare</button>
+        <button class="option-btn" onclick="checkAnswer('q2-3', 'D')">(D) vacant</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (A) steady</span><br>
+        【文脈】そのグラフは、過去数十年間にわたる世界気温の<strong>着実な（一定の）</strong>上昇を示している。
+        <div class="vocab-list">
+          ・(A) steady: 着実な、一定の、安定した<br>
+          ・(B) reluctant: 気が進まない、乗り気でない<br>
+          ・(C) rare: 珍しい、まれな<br>
+          ・(D) vacant: 空いている、空席の
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q2-4">
+      <div class="question-title">14. To achieve academic success, students must learn to ________ their time between studying and resting.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q2-4', 'A')">(A) waste</button>
+        <button class="option-btn" onclick="checkAnswer('q2-4', 'B')">(B) balance</button>
+        <button class="option-btn" onclick="checkAnswer('q2-4', 'C')">(C) confuse</button>
+        <button class="option-btn" onclick="checkAnswer('q2-4', 'D')">(D) delay</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) balance</span><br>
+        【文脈】学業で成果を収めるには、勉強と休息の間で時間の<strong>バランスを取る</strong>ことを学ばなければならない。
+        <div class="vocab-list">
+          ・(A) waste: 浪費する<br>
+          ・(B) balance: バランスを取る、調和させる<br>
+          ・(C) confuse: 混乱させる<br>
+          ・(D) delay: 延期する、遅らせる
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q2-5">
+      <div class="question-title">15. The biology professor explained that cell division is a fundamental ________ in all living organisms.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q2-5', 'A')">(A) rumor</button>
+        <button class="option-btn" onclick="checkAnswer('q2-5', 'B')">(B) coincidence</button>
+        <button class="option-btn" onclick="checkAnswer('q2-5', 'C')">(C) process</button>
+        <button class="option-btn" onclick="checkAnswer('q2-5', 'D')">(D) collision</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) process</span><br>
+        【文脈】生物学の教授は、細胞分裂はあらゆる生物において根本的な<strong>過程（プロセス）</strong>であると説明した。
+        <div class="vocab-list">
+          ・(A) rumor: 噂<br>
+          ・(B) coincidence: 偶然の一致<br>
+          ・(C) process: 過程、プロセス<br>
+          ・(D) collision: 衝突
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q2-6">
+      <div class="question-title">16. The student's explanation was so ________ that everyone in the classroom understood the complex formula immediately.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q2-6', 'A')">(A) vague</button>
+        <button class="option-btn" onclick="checkAnswer('q2-6', 'B')">(B) ambiguous</button>
+        <button class="option-btn" onclick="checkAnswer('q2-6', 'C')">(C) harsh</button>
+        <button class="option-btn" onclick="checkAnswer('q2-6', 'D')">(D) lucid</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (D) lucid</span><br>
+        【文脈】その生徒の説明はとても<strong>明快（分かりやすい）</strong>だったので、教室にいた全員が即座に複雑な公式を理解した。
+        <div class="vocab-list">
+          ・(A) vague: 曖昧な<br>
+          ・(B) ambiguous: 多義的な、曖昧な<br>
+          ・(C) harsh: 厳しい、辛辣な<br>
+          ・(D) lucid: 明快な、分かりやすい
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q2-7">
+      <div class="question-title">17. Renewable energy development is an effective way to ________ air pollution in large industrial cities.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q2-7', 'A')">(A) magnify</button>
+        <button class="option-btn" onclick="checkAnswer('q2-7', 'B')">(B) diminish</button>
+        <button class="option-btn" onclick="checkAnswer('q2-7', 'C')">(C) maintain</button>
+        <button class="option-btn" onclick="checkAnswer('q2-7', 'D')">(D) generate</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) diminish</span><br>
+        【文脈】再生可能エネルギーの開発は、大工業都市における大気汚染を<strong>減らす（減少させる）</strong>効果的な方法である。
+        <div class="vocab-list">
+          ・(A) magnify: 拡大する<br>
+          ・(B) diminish: 減らす、減少させる<br>
+          ・(C) maintain: 維持する<br>
+          ・(D) generate: 生成する
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q2-8">
+      <div class="question-title">18. The new policy was designed to ________ cooperation between teachers, students, and parents.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q2-8', 'A')">(A) prevent</button>
+        <button class="option-btn" onclick="checkAnswer('q2-8', 'B')">(B) foster</button>
+        <button class="option-btn" onclick="checkAnswer('q2-8', 'C')">(C) weaken</button>
+        <button class="option-btn" onclick="checkAnswer('q2-8', 'D')">(D) abandon</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) foster</span><br>
+        【文脈】新しい方針は、教師、生徒、保護者の間の協力を<strong>促進する（育む）</strong>ように設計された。
+        <div class="vocab-list">
+          ・(A) prevent: 防ぐ<br>
+          ・(B) foster: 促進する、育む<br>
+          ・(C) weaken: 弱める<br>
+          ・(D) abandon: 捨てる、あきらめる
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q2-9">
+      <div class="question-title">19. There is a ________ difference between the climate of coastal regions and inland deserts.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q2-9', 'A')">(A) hidden</button>
+        <button class="option-btn" onclick="checkAnswer('q2-9', 'B')">(B) identical</button>
+        <button class="option-btn" onclick="checkAnswer('q2-9', 'C')">(C) distinct</button>
+        <button class="option-btn" onclick="checkAnswer('q2-9', 'D')">(D) meaningless</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) distinct</span><br>
+        【文脈】沿岸地域と内陸の砂漠の気候の間には、<strong>明確な（はっきりした）</strong>違いが存在する。
+        <div class="vocab-list">
+          ・(A) hidden: 隠された<br>
+          ・(B) identical: 同一の<br>
+          ・(C) distinct: 明確な、はっきりした、異なる<br>
+          ・(D) meaningless: 無意味な
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q2-10">
+      <div class="question-title">20. The teacher decided to ________ extra time for students who needed assistance with algebra.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q2-10', 'A')">(A) allocate</button>
+        <button class="option-btn" onclick="checkAnswer('q2-10', 'B')">(B) withdraw</button>
+        <button class="option-btn" onclick="checkAnswer('q2-10', 'C')">(C) waste</button>
+        <button class="option-btn" onclick="checkAnswer('q2-10', 'D')">(D) deny</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (A) allocate</span><br>
+        【文脈】先生は、代数でサポートが必要な生徒のために追加時間を<strong>割り当てる（確保する）</strong>ことに決めた。
+        <div class="vocab-list">
+          ・(A) allocate: 割り当てる、配分する<br>
+          ・(B) withdraw: 撤回する、引き出す<br>
+          ・(C) waste: 浪費する<br>
+          ・(D) deny: 否定する、拒む
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TEST 3 (Q21-Q30) -->
+  <div id="test3" class="tab-content">
+    
+    <div class="question-card" id="q3-1">
+      <div class="question-title">21. Natural hazards such as earthquakes can cause ________ damage to urban infrastructure.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q3-1', 'A')">(A) minor</button>
+        <button class="option-btn" onclick="checkAnswer('q3-1', 'B')">(B) extensive</button>
+        <button class="option-btn" onclick="checkAnswer('q3-1', 'C')">(C) brief</button>
+        <button class="option-btn" onclick="checkAnswer('q3-1', 'D')">(D) harmless</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) extensive</span><br>
+        【文脈】地震などの自然災害は、都市のインフラに<strong>広範な（甚大な）</strong>被害をもたらす可能性がある。
+        <div class="vocab-list">
+          ・(A) minor: 軽微な<br>
+          ・(B) extensive: 広範囲にわたる、甚大な<br>
+          ・(C) brief: 簡潔な、短時間の<br>
+          ・(D) harmless: 無害な
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q3-2">
+      <div class="question-title">22. Students are requested to ________ from talking loudly while inside the campus library.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q3-2', 'A')">(A) proceed</button>
+        <button class="option-btn" onclick="checkAnswer('q3-2', 'B')">(B) insist</button>
+        <button class="option-btn" onclick="checkAnswer('q3-2', 'C')">(C) refrain</button>
+        <button class="option-btn" onclick="checkAnswer('q3-2', 'D')">(D) engage</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) refrain</span><br>
+        【文脈】キャンパスの図書室内では、大きな声で話すのを<strong>控える</strong>よう生徒に求められています。
+        <div class="vocab-list">
+          ・(A) proceed: 進む、続行する<br>
+          ・(B) insist: 主張する<br>
+          ・(C) refrain: 控える、慎む（refrain from -ing）<br>
+          ・(D) engage: 携わる、従事する
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q3-3">
+      <div class="question-title">23. The government established new safety guidelines to ________ public health during the winter flu season.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q3-3', 'A')">(A) endanger</button>
+        <button class="option-btn" onclick="checkAnswer('q3-3', 'B')">(B) neglect</button>
+        <button class="option-btn" onclick="checkAnswer('q3-3', 'C')">(C) abandon</button>
+        <button class="option-btn" onclick="checkAnswer('q3-3', 'D')">(D) safeguard</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (D) safeguard</span><br>
+        【文脈】政府は冬のインフルエンザシーズン中の公衆衛生を<strong>守る（保護する）</strong>ため、新しい安全ガイドラインを策定した。
+        <div class="vocab-list">
+          ・(A) endanger: 危険にさらす<br>
+          ・(B) neglect: 怠る<br>
+          ・(C) abandon: 見捨て放り出す<br>
+          ・(D) safeguard: 守る、保護する
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q3-4">
+      <div class="question-title">24. Before drawing a conclusion, the research group must ________ all the collected data thoroughly.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q3-4', 'A')">(A) examine</button>
+        <button class="option-btn" onclick="checkAnswer('q3-4', 'B')">(B) discard</button>
+        <button class="option-btn" onclick="checkAnswer('q3-4', 'C')">(C) conceal</button>
+        <button class="option-btn" onclick="checkAnswer('q3-4', 'D')">(D) invent</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (A) examine</span><br>
+        【文脈】結論を出す前に、研究グループは収集したすべてのデータを徹底的に<strong>調査（検証）しなければならない</strong>。
+        <div class="vocab-list">
+          ・(A) examine: 調査する、検証する<br>
+          ・(B) discard: 捨てる<br>
+          ・(C) conceal: 隠す<br>
+          ・(D) invent: 発明する
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q3-5">
+      <div class="question-title">25. The student showed great ________ when overcoming the challenges of learning a second language.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q3-5', 'A')">(A) weakness</button>
+        <button class="option-btn" onclick="checkAnswer('q3-5', 'B')">(B) resilience</button>
+        <button class="option-btn" onclick="checkAnswer('q3-5', 'C')">(C) ignorance</button>
+        <button class="option-btn" onclick="checkAnswer('q3-5', 'D')">(D) indifference</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) resilience</span><br>
+        【文脈】その生徒は、第二言語習得の困難を克服する中で見事な<strong>回復力（粘り強さ）</strong>を示した。
+        <div class="vocab-list">
+          ・(A) weakness: 弱さ<br>
+          ・(B) resilience: 回復力、立ち直る力、弾力<br>
+          ・(C) ignorance: 無知<br>
+          ・(D) indifference: 無関心
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q3-6">
+      <div class="question-title">26. The presentation contained several ________ arguments that successfully persuaded the school board.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q3-6', 'A')">(A) illogical</button>
+        <button class="option-btn" onclick="checkAnswer('q3-6', 'B')">(B) boring</button>
+        <button class="option-btn" onclick="checkAnswer('q3-6', 'C')">(C) compelling</button>
+        <button class="option-btn" onclick="checkAnswer('q3-6', 'D')">(D) weak</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) compelling</span><br>
+        【文脈】そのプレゼンテーションには、教育委員会を納得させることに成功したいくつかの<strong>説得力のある（強力な）</strong>議論が含まれていた。
+        <div class="vocab-list">
+          ・(A) illogical: 非論理的な<br>
+          ・(B) boring: 退屈な<br>
+          ・(C) compelling: 説得力のある、人を惹きつける<br>
+          ・(D) weak: 弱い
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q3-7">
+      <div class="question-title">27. The teacher decided to ________ the instructions on the board so that everyone could read them.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q3-7', 'A')">(A) hide</button>
+        <button class="option-btn" onclick="checkAnswer('q3-7', 'B')">(B) display</button>
+        <button class="option-btn" onclick="checkAnswer('q3-7', 'C')">(C) erase</button>
+        <button class="option-btn" onclick="checkAnswer('q3-7', 'D')">(D) whisper</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) display</span><br>
+        【文脈】先生は誰もが読めるように、指示事項を黒板に<strong>表示（提示）する</strong>ことに決めた。
+        <div class="vocab-list">
+          ・(A) hide: 隠す<br>
+          ・(B) display: 表示する、展示する<br>
+          ・(C) erase: 消す<br>
+          ・(D) whisper: ささやく
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q3-8">
+      <div class="question-title">28. Air pollution remains a ________ problem in rapidly growing metropolitan cities.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q3-8', 'A')">(A) temporary</button>
+        <button class="option-btn" onclick="checkAnswer('q3-8', 'B')">(B) solved</button>
+        <button class="option-btn" onclick="checkAnswer('q3-8', 'C')">(C) negligible</button>
+        <button class="option-btn" onclick="checkAnswer('q3-8', 'D')">(D) persistent</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (D) persistent</span><br>
+        【文脈】大気汚染は、急速に成長する大都市圏において<strong>根強い（持続的な）</strong>問題であり続けている。
+        <div class="vocab-list">
+          ・(A) temporary: 一時的な<br>
+          ・(B) solved: 解決された<br>
+          ・(C) negligible: 無視できるほどの、ごく僅かな<br>
+          ・(D) persistent: 根強い、粘り強い、継続的な
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q3-9">
+      <div class="question-title">29. The debate team worked hard to ________ their opponent's argument with strong evidence.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q3-9', 'A')">(A) refute</button>
+        <button class="option-btn" onclick="checkAnswer('q3-9', 'B')">(B) support</button>
+        <button class="option-btn" onclick="checkAnswer('q3-9', 'C')">(C) accept</button>
+        <button class="option-btn" onclick="checkAnswer('q3-9', 'D')">(D) admire</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (A) refute</span><br>
+        【文脈】ディベートチームは強力な証拠を用いて相手の主張を<strong>反論（論破）する</strong>ために懸命に取り組んだ。
+        <div class="vocab-list">
+          ・(A) refute: 論破する、反論する<br>
+          ・(B) support: 支持する<br>
+          ・(C) accept: 受け入れる<br>
+          ・(D) admire: 称賛する
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q3-10">
+      <div class="question-title">30. Solar energy and wind power are examples of ________ energy sources.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q3-10', 'A')">(A) exhausted</button>
+        <button class="option-btn" onclick="checkAnswer('q3-10', 'B')">(B) harmful</button>
+        <button class="option-btn" onclick="checkAnswer('q3-10', 'C')">(C) sustainable</button>
+        <button class="option-btn" onclick="checkAnswer('q3-10', 'D')">(D) limited</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) sustainable</span><br>
+        【文脈】太陽光エネルギーと風力発電は、<strong>持続可能な（サステナブルな）</strong>エネルギー源の例である。
+        <div class="vocab-list">
+          ・(A) exhausted: 枯渇した、使い果した<br>
+          ・(B) harmful: 有害な<br>
+          ・(C) sustainable: 持続可能な<br>
+          ・(D) limited: 限られた
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TEST 4 (Q31-Q40) -->
+  <div id="test4" class="tab-content">
+    
+    <div class="question-card" id="q4-1">
+      <div class="question-title">31. Scientists must ________ their experiments multiple times to ensure the accuracy of the findings.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q4-1', 'A')">(A) ignore</button>
+        <button class="option-btn" onclick="checkAnswer('q4-1', 'B')">(B) oppose</button>
+        <button class="option-btn" onclick="checkAnswer('q4-1', 'C')">(C) replicate</button>
+        <button class="option-btn" onclick="checkAnswer('q4-1', 'D')">(D) prevent</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) replicate</span><br>
+        【文脈】科学者は結果の正確さを保障するため、自らの実験を何度も<strong>再現（複製）しなければならない</strong>。
+        <div class="vocab-list">
+          ・(A) ignore: 無視する<br>
+          ・(B) oppose: 反対する<br>
+          ・(C) replicate: 複製する、再現する<br>
+          ・(D) prevent: 防ぐ
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q4-2">
+      <div class="question-title">32. The student's essay showed a high level of academic ________ and thoughtful analysis.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q4-2', 'A')">(A) dishonesty</button>
+        <button class="option-btn" onclick="checkAnswer('q4-2', 'B')">(B) integrity</button>
+        <button class="option-btn" onclick="checkAnswer('q4-2', 'C')">(C) confusion</button>
+        <button class="option-btn" onclick="checkAnswer('q4-2', 'D')">(D) carelessness</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) integrity</span><br>
+        【文脈】その生徒のエッセイは、高い水準の学術的<strong>誠実さ（真摯さ）</strong>と思慮深い分析を示していた。
+        <div class="vocab-list">
+          ・(A) dishonesty: 不誠実<br>
+          ・(B) integrity: 誠実さ、品格、完全性<br>
+          ・(C) confusion: 混乱<br>
+          ・(D) carelessness: 不注意
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q4-3">
+      <div class="question-title">33. The new library rules were designed to ________ equal access to learning resources for all students.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q4-3', 'A')">(A) restrict</button>
+        <button class="option-btn" onclick="checkAnswer('q4-3', 'B')">(B) block</button>
+        <button class="option-btn" onclick="checkAnswer('q4-3', 'C')">(C) ensure</button>
+        <button class="option-btn" onclick="checkAnswer('q4-3', 'D')">(D) delay</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) ensure</span><br>
+        【文脈】新しい図書室の利用規則は、すべての生徒に学習資源への平等なアクセスを<strong>確実にする（保証する）</strong>よう設計された。
+        <div class="vocab-list">
+          ・(A) restrict: 制限する<br>
+          ・(B) block: 遮断する<br>
+          ・(C) ensure: 確実にする、保証する<br>
+          ・(D) delay: 遅らせる
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q4-4">
+      <div class="question-title">34. Due to the high risk of severe weather, the school board decided to ________ the outdoor ceremony.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q4-4', 'A')">(A) cancel</button>
+        <button class="option-btn" onclick="checkAnswer('q4-4', 'B')">(B) accelerate</button>
+        <button class="option-btn" onclick="checkAnswer('q4-4', 'C')">(C) applaud</button>
+        <button class="option-btn" onclick="checkAnswer('q4-4', 'D')">(D) initiate</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (A) cancel</span><br>
+        【文脈】悪天候の危険性が高いため、教育委員会は屋外の式典を<strong>中止する（取りやめる）</strong>ことに決めた。
+        <div class="vocab-list">
+          ・(A) cancel: 中止する、取り消す<br>
+          ・(B) accelerate: 加速させる<br>
+          ・(C) applaud: 拍手喝采する<br>
+          ・(D) initiate: 開始する
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q4-5">
+      <div class="question-title">35. The student worked hard to ________ the difficult mathematical concept before the midterm exam.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q4-5', 'A')">(A) overlook</button>
+        <button class="option-btn" onclick="checkAnswer('q4-5', 'B')">(B) reject</button>
+        <button class="option-btn" onclick="checkAnswer('q4-5', 'C')">(C) abandon</button>
+        <button class="option-btn" onclick="checkAnswer('q4-5', 'D')">(D) grasp</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (D) grasp</span><br>
+        【文脈】その生徒は中間試験の前に、難しい数学の概念を<strong>理解する（把握する）</strong>ために一生懸命勉強した。
+        <div class="vocab-list">
+          ・(A) overlook: 見落とす、見過ごす<br>
+          ・(B) reject: 拒絶する<br>
+          ・(C) abandon: 捨てる<br>
+          ・(D) grasp: 理解する、しっかり掴む
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q4-6">
+      <div class="question-title">36. The researcher highlighted the ________ role of rivers in the development of early human civilizations.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q4-6', 'A')">(A) minor</button>
+        <button class="option-btn" onclick="checkAnswer('q4-6', 'B')">(B) pivotal</button>
+        <button class="option-btn" onclick="checkAnswer('q4-6', 'C')">(C) irrelevant</button>
+        <button class="option-btn" onclick="checkAnswer('q4-6', 'D')">(D) optional</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) pivotal</span><br>
+        【文脈】研究者は、初期人類文明の発達において河川が果たした<strong>中心的な（決定的な）</strong>役割を強調した。
+        <div class="vocab-list">
+          ・(A) minor: 重要でない<br>
+          ・(B) pivotal: 中核となる、決定的な、極めて重要な<br>
+          ・(C) irrelevant: 無関係な<br>
+          ・(D) optional: 任意の
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q4-7">
+      <div class="question-title">37. During the seminar, students were encouraged to ________ their own unique perspectives on the topic.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q4-7', 'A')">(A) suppress</button>
+        <button class="option-btn" onclick="checkAnswer('q4-7', 'B')">(B) conceal</button>
+        <button class="option-btn" onclick="checkAnswer('q4-7', 'C')">(C) express</button>
+        <button class="option-btn" onclick="checkAnswer('q4-7', 'D')">(D) forget</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) express</span><br>
+        【文脈】ゼミ中、生徒たちはそのトピックに関して自身のユニークな視点を<strong>表現する（述べる）</strong>よう促された。
+        <div class="vocab-list">
+          ・(A) suppress: 抑圧する、抑制する<br>
+          ・(B) conceal: 隠す<br>
+          ・(C) express: 表現する、述べる<br>
+          ・(D) forget: 忘れる
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q4-8">
+      <div class="question-title">38. The company's innovative product brought a ________ advantage over its regional competitors.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q4-8', 'A')">(A) passive</button>
+        <button class="option-btn" onclick="checkAnswer('q4-8', 'B')">(B) competitive</button>
+        <button class="option-btn" onclick="checkAnswer('q4-8', 'C')">(C) destructive</button>
+        <button class="option-btn" onclick="checkAnswer('q4-8', 'D')">(D) hesitate</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) competitive</span><br>
+        【文脈】その企業の革新的な製品は、地域の競合他社に対して<strong>競争上の（優位な）</strong>強みをもたらした。
+        <div class="vocab-list">
+          ・(A) passive: 受動的な<br>
+          ・(B) competitive: 競争力のある、競争の<br>
+          ・(C) destructive: 破壊的な<br>
+          ・(D) hesitate: ためらう（※動詞）
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q4-9">
+      <div class="question-title">39. Teachers must ________ that all students follow the safety procedures during chemical experiments.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q4-9', 'A')">(A) guess</button>
+        <button class="option-btn" onclick="checkAnswer('q4-9', 'B')">(B) ignore</button>
+        <button class="option-btn" onclick="checkAnswer('q4-9', 'C')">(C) doubt</button>
+        <button class="option-btn" onclick="checkAnswer('q4-9', 'D')">(D) verify</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (D) verify</span><br>
+        【文脈】教師は化学実験中、すべての生徒が安全手順に従っているかを<strong>確認（検証）しなければならない</strong>。
+        <div class="vocab-list">
+          ・(A) guess: 推測する<br>
+          ・(B) ignore: 無視する<br>
+          ・(C) doubt: 疑う<br>
+          ・(D) verify: 確認する、検証する
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q4-10">
+      <div class="question-title">40. The main objective of the course is to ________ critical thinking skills through group discussion.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q4-10', 'A')">(A) hinder</button>
+        <button class="option-btn" onclick="checkAnswer('q4-10', 'B')">(B) cultivate</button>
+        <button class="option-btn" onclick="checkAnswer('q4-10', 'C')">(C) diminish</button>
+        <button class="option-btn" onclick="checkAnswer('q4-10', 'D')">(D) limit</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) cultivate</span><br>
+        【文脈】この講座の主な目的は、グループ議論を通じて批判的思考力を<strong>養う（培養する）</strong>ことだ。
+        <div class="vocab-list">
+          ・(A) hinder: 妨げる<br>
+          ・(B) cultivate: 養う、栽培する、開墾する<br>
+          ・(C) diminish: 減らす<br>
+          ・(D) limit: 制限する
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TEST 5 (Q41-Q50) -->
+  <div id="test5" class="tab-content">
+    
+    <div class="question-card" id="q5-1">
+      <div class="question-title">41. The textbook chapter offers a clear ________ of the factors contributing to economic inflation.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q5-1', 'A')">(A) confusion</button>
+        <button class="option-btn" onclick="checkAnswer('q5-1', 'B')">(B) obstacle</button>
+        <button class="option-btn" onclick="checkAnswer('q5-1', 'C')">(C) exposition</button>
+        <button class="option-btn" onclick="checkAnswer('q5-1', 'D')">(D) delay</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) exposition</span><br>
+        【文脈】教科書の章では、経済インフレに寄与する要因についての分かりやすい<strong>解説（論説）</strong>が提供されている。
+        <div class="vocab-list">
+          ・(A) confusion: 混乱<br>
+          ・(B) obstacle: 障害<br>
+          ・(C) exposition: 解説、詳述、博覧会<br>
+          ・(D) delay: 遅延
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q5-2">
+      <div class="question-title">42. Students should ________ active reading strategies, such as highlighting key phrases and taking notes.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q5-2', 'A')">(A) reject</button>
+        <button class="option-btn" onclick="checkAnswer('q5-2', 'B')">(B) employ</button>
+        <button class="option-btn" onclick="checkAnswer('q5-2', 'C')">(C) forbid</button>
+        <button class="option-btn" onclick="checkAnswer('q5-2', 'D')">(D) forget</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) employ</span><br>
+        【文脈】生徒は主要なフレーズをハイライトしたりメモを取ったりするような、アクティブリーディングの手法を<strong>採用（利用）すべきだ</strong>。
+        <div class="vocab-list">
+          ・(A) reject: 拒否する<br>
+          ・(B) employ: 採用する、用いる、雇う<br>
+          ・(C) forbid: 禁じる<br>
+          ・(D) forget: 忘れる
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q5-3">
+      <div class="question-title">43. The unexpected test results caused considerable ________ among the research team members.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q5-3', 'A')">(A) certainty</button>
+        <button class="option-btn" onclick="checkAnswer('q5-3', 'B')">(B) relief</button>
+        <button class="option-btn" onclick="checkAnswer('q5-3', 'C')">(C) satisfaction</button>
+        <button class="option-btn" onclick="checkAnswer('q5-3', 'D')">(D) perplexity</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (D) perplexity</span><br>
+        【文脈】予期せぬテスト結果は、研究チームのメンバーの間にかなりの<strong>困惑（混乱）</strong>を引き起こした。
+        <div class="vocab-list">
+          ・(A) certainty: 確実性<br>
+          ・(B) relief: 安堵、安心<br>
+          ・(C) satisfaction: 満足<br>
+          ・(D) perplexity: 困惑、複雑さ
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q5-4">
+      <div class="question-title">44. Due to financial constraints, the university had to ________ its study abroad program for next semester.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q5-4', 'A')">(A) curtail</button>
+        <button class="option-btn" onclick="checkAnswer('q5-4', 'B')">(B) expand</button>
+        <button class="option-btn" onclick="checkAnswer('q5-4', 'C')">(C) celebrate</button>
+        <button class="option-btn" onclick="checkAnswer('q5-4', 'D')">(D) magnify</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (A) curtail</span><br>
+        【文脈】予算上の制約により、大学は来学期の留学プログラムを<strong>削減（縮小）せざるを得なかった</strong>。
+        <div class="vocab-list">
+          ・(A) curtail: 削減する、縮小する<br>
+          ・(B) expand: 拡大する<br>
+          ・(C) celebrate: 祝う<br>
+          ・(D) magnify: 拡大する
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q5-5">
+      <div class="question-title">45. The student provided a ________ explanation that addressed every question raised by the class.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q5-5', 'A')">(A) superficial</button>
+        <button class="option-btn" onclick="checkAnswer('q5-5', 'B')">(B) thorough</button>
+        <button class="option-btn" onclick="checkAnswer('q5-5', 'C')">(C) hasty</button>
+        <button class="option-btn" onclick="checkAnswer('q5-5', 'D')">(D) careless</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) thorough</span><br>
+        【文脈】その生徒は、クラスから出されたあらゆる質問に答える<strong>徹底的な（全般にわたる）</strong>説明をした。
+        <div class="vocab-list">
+          ・(A) superficial: 表面的な<br>
+          ・(B) thorough: 徹底的な、完全な<br>
+          ・(C) hasty: 焦った、急な<br>
+          ・(D) careless: 不注意な
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q5-6">
+      <div class="question-title">46. It is vital to ________ accurate records of all scientific measurements taken during the study.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q5-6', 'A')">(A) abandon</button>
+        <button class="option-btn" onclick="checkAnswer('q5-6', 'B')">(B) destroy</button>
+        <button class="option-btn" onclick="checkAnswer('q5-6', 'C')">(C) maintain</button>
+        <button class="option-btn" onclick="checkAnswer('q5-6', 'D')">(D) corrupt</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) maintain</span><br>
+        【文脈】研究中に測定されたすべての科学的数値の正確な記録を<strong>維持する（保管する）</strong>ことが極めて重要だ。
+        <div class="vocab-list">
+          ・(A) abandon: 放棄する<br>
+          ・(B) destroy: 破壊する<br>
+          ・(C) maintain: 維持する、保つ<br>
+          ・(D) corrupt: 汚職する、腐敗させる
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q5-7">
+      <div class="question-title">47. The professor praised the class for their ________ efforts during the final laboratory project.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q5-7', 'A')">(A) negligent</button>
+        <button class="option-btn" onclick="checkAnswer('q5-7', 'B')">(B) passive</button>
+        <button class="option-btn" onclick="checkAnswer('q5-7', 'C')">(C) harmful</button>
+        <button class="option-btn" onclick="checkAnswer('q5-7', 'D')">(D) commendable</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (D) commendable</span><br>
+        【文脈】教授は、最後の実験プロジェクトにおけるクラスの<strong>称賛に値する（立派な）</strong>努力を褒めた（称賛した）。
+        <div class="vocab-list">
+          ・(A) negligent: 怠慢な<br>
+          ・(B) passive: 受動的な<br>
+          ・(C) harmful: 有害な<br>
+          ・(D) commendable: 称賛に値する、感心な
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q5-8">
+      <div class="question-title">48. Historical documents provide valuable insights that help us ________ past events accurately.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q5-8', 'A')">(A) confuse</button>
+        <button class="option-btn" onclick="checkAnswer('q5-8', 'B')">(B) interpret</button>
+        <button class="option-btn" onclick="checkAnswer('q5-8', 'C')">(C) misrepresent</button>
+        <button class="option-btn" onclick="checkAnswer('q5-8', 'D')">(D) forget</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (B) interpret</span><br>
+        【文脈】歴史的文書は、私たちが過去の出来事を正確に<strong>解釈する（読み解く）</strong>のに役立つ貴重な知見を提供する。
+        <div class="vocab-list">
+          ・(A) confuse: 混乱させる<br>
+          ・(B) interpret: 解釈する、通訳する<br>
+          ・(C) misrepresent: 誤って伝える<br>
+          ・(D) forget: 忘れる
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q5-9">
+      <div class="question-title">49. The committee recommended several ________ to improve overall campus safety standards.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q5-9', 'A')">(A) measures</button>
+        <button class="option-btn" onclick="checkAnswer('q5-9', 'B')">(B) obstacles</button>
+        <button class="option-btn" onclick="checkAnswer('q5-9', 'C')">(C) rumors</button>
+        <button class="option-btn" onclick="checkAnswer('q5-9', 'D')">(D) penalties</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (A) measures</span><br>
+        【文脈】委員会は、キャンパス全体の安全基準を向上させるためのいくつかの<strong>対策（施策）</strong>を推奨した。
+        <div class="vocab-list">
+          ・(A) measures: 対策、手段、測定<br>
+          ・(B) obstacles: 障害<br>
+          ・(C) rumors: 噂<br>
+          ・(D) penalties: 罰則
+        </div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q5-10">
+      <div class="question-title">50. Active student engagement is essential for creating a ________ and dynamic learning environment.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="checkAnswer('q5-10', 'A')">(A) dull</button>
+        <button class="option-btn" onclick="checkAnswer('q5-10', 'B')">(B) rigid</button>
+        <button class="option-btn" onclick="checkAnswer('q5-10', 'C')">(C) stimulating</button>
+        <button class="option-btn" onclick="checkAnswer('q5-10', 'D')">(D) harmful</button>
+      </div>
+      <div class="explanation">
+        <span class="label">正解: (C) stimulating</span><br>
+        【文脈】<strong>刺激的な（意欲を高める）</strong>活発な学習環境を作り出すには、生徒の積極的な関与が必要不可欠だ。
+        <div class="vocab-list">
+          ・(A) dull: 退屈な、鈍い<br>
+          ・(B) rigid: 厳格な、硬い<br>
+          ・(C) stimulating: 刺激的な、元気づける<br>
+          ・(D) harmful: 有害な
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  let currentZoom = 100;
+
+  function changeZoom(delta) {
+    currentZoom = Math.min(Math.max(70, currentZoom + delta), 130);
+    document.getElementById('zoom-val').innerText = currentZoom + '%';
+    document.getElementById('main-container').style.transform = `scale(${currentZoom / 100})`;
+  }
+
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+      tabcontent[i].classList.remove("active");
+    }
+
+    tablinks = document.getElementsByClassName("tab-btn");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].classList.remove("active");
+    }
+
+    document.getElementById(tabName).style.display = "block";
+    document.getElementById(tabName).classList.add("active");
+    evt.currentTarget.classList.add("active");
+  }
+
+  function checkAnswer(questionId, selectedLetter) {
+    const card = document.getElementById(questionId);
+    const buttons = card.querySelectorAll('.option-btn');
+    const explanation = card.querySelector('.explanation');
+    
+    const correctMatch = explanation.innerHTML.match(/正解:\s*\(([A-D])\)/);
+    if (!correctMatch) return;
+    const correctLetter = correctMatch[1];
+
+    buttons.forEach(btn => {
+      btn.disabled = true;
+      const btnText = btn.innerText.trim();
+      
+      if (btnText.startsWith(`(${correctLetter})`)) {
+        btn.classList.add('correct');
+      }
+      if (btnText.startsWith(`(${selectedLetter})`) && selectedLetter !== correctLetter) {
+        btn.classList.add('incorrect');
+      }
+    });
+
+    explanation.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
